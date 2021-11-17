@@ -1,5 +1,5 @@
 import './App.css';
-import {getFirestore, collection, addDoc, getDocs} from "firebase/firestore";
+import {getFirestore, collection, getDocs} from "firebase/firestore";
 import {useEffect, useState} from "react";
 import firebase from "firebase/compat/app";
 
