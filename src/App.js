@@ -42,9 +42,9 @@ function App() {
 
   return (
     <div>
-      <Calendar />
+      {/*<Calendar />*/}
       <Form />
-      <SongView />
+      {/*<SongView />*/}
       {/* <p>{variable1}</p>
       <p>{variable2}</p>
       <p>{variables}</p> */}
