@@ -38,7 +38,7 @@ export default function Form() {
 
   const chooseArtist = (chosenArtistId) => {
     const chosenArtist = artistList.filter(
-      (artist) => artist.id == chosenArtistId
+      (artist) => artist.id === chosenArtistId
     )[0];
     setArtist(chosenArtist);
     console.log(chosenArtistId);
@@ -54,7 +54,7 @@ export default function Form() {
         <div>
           {/* <input type="text" {...bindArtist} /> */}
           <select onChange={(e) => chooseArtist(e.target.value)}>
-            <option value="0"></option>
+            <option value="0" />
             {artistList.length > 0
               ? artistList.map((artist, key) => (
                   <option value={artist.id} key={key}>
@@ -77,6 +77,9 @@ export default function Form() {
       <div className="test">
         <p>chosen artist: {artist.name}</p>
       </div>
+      <p>
+        {song} {day}
+      </p>
     </div>
   );
 }

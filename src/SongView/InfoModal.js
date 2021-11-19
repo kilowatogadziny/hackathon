@@ -38,7 +38,7 @@ export default function InfoModal(songId) {
     }
 
     fetchData();
-  }, []);
+  }, [songId]);
 
   const getSnapshot = async (id) => {
     const songsRef = doc(db, "songs", id);
