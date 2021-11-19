@@ -9,6 +9,8 @@ import {
   getMonthDropdownOptions,
   getYearDropdownOptions,
 } from "./helpers";
+import InfoModal from "../SongView/InfoModal";
+import { useEffect, useState } from "react";
 
 Calendar.propTypes = {
   className: PropTypes.string,
@@ -18,11 +20,12 @@ Calendar.propTypes = {
 };
 export default function Calendar({
   className = "",
-  yearAndMonth = [2021, 6],
+  yearAndMonth = [2021, 11],
   onYearAndMonthChange,
   renderDay = () => null,
 }) {
   const [year, month] = yearAndMonth;
+  const [isModalVisible, setModalVisible] = useState(false);
 
   let currentMonthDays = createDaysForCurrentMonth(year, month);
   let previousMonthDays = createDaysForPreviousMonth(
@@ -67,6 +70,10 @@ export default function Calendar({
     let nextMonth = month;
     let nextYear = parseInt(evt.target.value, 10);
     onYearAndMonthChange([nextYear, nextMonth]);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   return (
@@ -124,13 +131,18 @@ export default function Calendar({
           >
             <div
               className="day-content-wrapper"
-              onClick={() => alert(day.dayOfMonth)}
+              onClick={() => setModalVisible(true)}
             >
               {renderDay(day)}
             </div>
           </div>
         ))}
       </div>
+      <InfoModal
+        songId={"1"}
+        isVisible={isModalVisible}
+        closeModal={() => closeModal()}
+      />
     </div>
   );
 }

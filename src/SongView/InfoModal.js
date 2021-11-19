@@ -6,9 +6,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import "./styles.css";
 
-export default function InfoModal(songId) {
+export default function InfoModal({ songId, isVisible, closeModal }) {
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => closeModal();
   const handleShow = () => setShow(true);
 
   const [song, setSong] = useState([
@@ -27,7 +27,7 @@ export default function InfoModal(songId) {
       const documentId = songId;
       let songOfDay = {};
       await getSnapshot(documentId).then((snapshot) => {
-        if (snapshot.exists()) {
+        if (snapshot && snapshot.exists()) {
           songOfDay = toSongOfDayObject(snapshot);
         } else {
           console.log("No such document!" + documentId);
@@ -41,8 +41,13 @@ export default function InfoModal(songId) {
   }, [songId]);
 
   const getSnapshot = async (id) => {
-    const songsRef = doc(db, "songs", id);
-    return await getDoc(songsRef);
+    try {
+      const songsRef = doc(db, "songs", id);
+      return await getDoc(songsRef);
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
   };
 
   const toSongOfDayObject = (snapshot) => {
@@ -67,7 +72,7 @@ export default function InfoModal(songId) {
       <Modal
         centered
         scrollable={true}
-        show={show}
+        show={isVisible}
         dialogClassName={"primaryModal"}
         onHide={handleClose}
       >
