@@ -2,7 +2,7 @@ import "./App.css";
 import firebase from "firebase/compat/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import NameForm from "./NameForm";
+import { NameForm } from "./NameForm";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCRPSk2Y5p-Yl6FHrf_3CBc-G30wb3x698",

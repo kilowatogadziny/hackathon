@@ -1,38 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 
-class NameForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { value: "" };
+export function NameForm() {
+  const [name, setName] = useState("");
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    alert(`Submitting Name ${name}`);
+  };
 
-  handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
-
-  handleSubmit(event) {
-    alert("A name was submitted: " + this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input
-            type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        First Name:
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
+      <input type="submit" value="Submit" />
+    </form>
+  );
 }
-
-export default NameForm;
