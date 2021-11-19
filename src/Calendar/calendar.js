@@ -122,7 +122,12 @@ export default function Calendar({
               "current-month": day.isCurrentMonth,
             })}
           >
-            <div className="day-content-wrapper">{renderDay(day)}</div>
+            <div
+              className="day-content-wrapper"
+              onClick={() => alert(day.dayOfMonth)}
+            >
+              {renderDay(day)}
+            </div>
           </div>
         ))}
       </div>
