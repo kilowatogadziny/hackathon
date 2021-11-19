@@ -18,8 +18,7 @@ export default function Form() {
   const ARTISTS_URL = "http://newonce-api.herokuapp.com/artists";
   const RELEASES_URL =
     "http://newonce-api.herokuapp.com/releases?search_query=";
-  const SONGS_URL =
-    "http://newonce-api.herokuapp.com/releases/jarmark-15698465";
+  const SONGS_URL = "http://newonce-api.herokuapp.com/releases/";
 
   useEffect(() => {
     fetch(ARTISTS_URL, {
@@ -77,6 +76,27 @@ export default function Form() {
     setAlbumSlug(chosenAlbum.album_slug);
     console.log("chosen album slug");
     console.log(chosenAlbum.album_slug);
+
+    await getAlbumSongs(chosenAlbum.album_slug);
+  };
+
+  const getAlbumSongs = async (albumSlug) => {
+    let apiUrl = SONGS_URL + albumSlug;
+    console.log(apiUrl);
+    fetch(apiUrl, {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((json) => {
+            console.log(json);
+            setSongsList(json.tracklist);
+          });
+        } else {
+          console.log("not okay");
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   const chooseSong = (chosenSong) => {
@@ -152,10 +172,6 @@ export default function Form() {
         </div>
         <input type="submit" value="Dodaj" />
       </form>
-      <div className="test">
-        <p>chosen artist: {artist.name}</p>
-        <p>chosen song: {song}</p>
-      </div>
     </div>
   );
 }
