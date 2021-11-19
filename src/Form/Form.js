@@ -1,5 +1,5 @@
-import React from "react";
 import "./styles.css";
+import React from "react";
 import { useInput } from "../hooks/inputHook";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -7,17 +7,19 @@ import { useEffect } from "react";
 export default function Form() {
   // const { value: artist, bind: bindArtist, reset: resetArtist } = useInput("");
   const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
-  const [release, setRelease] = useState({ slug: "jarmark-15698465" });
-  const [song, setSong] = useState("");
-
-  // const { value: song, bind: bindSong, reset: resetSong } = useInput("");
+  const [album, setAlbumSlug] = useState({ id: 0, name: "", slug: "" });
+  const [artistsReleases, setArtistsReleases] = useState([]);
+  //   const { value: song, bind: bindSong, reset: resetSong } = useInput("");
   const { value: day, bind: bindDay, reset: resetDay } = useInput("");
   const [artistList, setArtistList] = useState([]);
-  const [releaseList, setReleaseList] = useState([]);
+  const [song, setSong] = useState("");
   const [songsList, setSongsList] = useState([]);
 
   const ARTISTS_URL = "http://newonce-api.herokuapp.com/artists";
-  const SONGS_URL = "http://newonce-api.herokuapp.com/releases/" + release.slug;
+  const RELEASES_URL =
+    "http://newonce-api.herokuapp.com/releases?search_query=";
+  const SONGS_URL =
+    "http://newonce-api.herokuapp.com/releases/jarmark-15698465";
 
   useEffect(() => {
     fetch(ARTISTS_URL, {
@@ -39,10 +41,10 @@ export default function Form() {
     event.preventDefault();
     // resetArtist();
     // resetSong();
-    // resetDay();
+    resetDay();
   };
 
-  const chooseArtist = (chosenArtistId) => {
+  const chooseArtist = async (chosenArtistId) => {
     const chosenArtist = artistList.filter(
       (artist) => artist.id == chosenArtistId
     )[0];
@@ -50,26 +52,54 @@ export default function Form() {
     console.log(chosenArtistId);
     console.log(chosenArtist);
     // fetch artist songs
+    await getArtistAlbums(artist.name);
+  };
 
-    fetch(SONGS_URL, {
+  const getArtistAlbums = async (artistName) => {
+    let apiUrl = RELEASES_URL + artistName;
+    fetch(apiUrl, {
       method: "GET",
     })
       .then((response) => {
         if (response.ok) {
-          response.json().then((json) => {
-            console.log(json.tracklist);
-            setSongsList(json.tracklist);
-          });
+          responseFromArtistsOk(response);
         } else {
-          console.log("something went wrong");
+          responseFromArtistsNotOk();
         }
       })
       .catch((error) => console.log(error));
   };
 
+  const chooseAlbum = async (chosenAlbumId) => {
+    const chosenAlbum = artistsReleases.filter(
+      (release) => chosenAlbumId === release.album_id.toString()
+    )[0];
+    setAlbumSlug(chosenAlbum.album_slug);
+    console.log("chosen album slug");
+    console.log(chosenAlbum.album_slug);
+  };
+
   const chooseSong = (chosenSong) => {
     setSong(chosenSong);
   };
+
+  const responseFromArtistsOk = (response) => {
+    response.json().then((json) => {
+      let releases = [];
+      let releasesFromApi = json.items;
+      for (const release of releasesFromApi) {
+        let newRelease = {
+          album_id: release.id,
+          album_name: release.name,
+          album_slug: release.slug,
+        };
+        releases.push(newRelease);
+      }
+      setArtistsReleases(releases);
+    });
+  };
+
+  const responseFromArtistsNotOk = () => {};
 
   return (
     <div className="form">
@@ -89,6 +119,20 @@ export default function Form() {
               : null}
           </select>
         </div>
+        <label>Album:</label>
+        <div>
+          <select onChange={(e) => chooseAlbum(e.target.value)}>
+            <option value="0"></option>
+            {artistsReleases.length > 0
+              ? artistsReleases.map((release, key) => (
+                  <option value={release.album_id} key={key}>
+                    {release.album_name}
+                  </option>
+                ))
+              : null}
+          </select>
+        </div>
+
         <label>Utwór:</label>
         <div>
           <select onChange={(e) => chooseSong(e.target.value)}>
