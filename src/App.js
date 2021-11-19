@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import Form from "./Form/Form";
-import SongView from "./SongView/SongView";
+// import SongView from "./SongView/SongView";
 import NewCalendar from "./Calendar/NewCalendar";
 import dayjs from "dayjs";
 import React from "react";
@@ -50,7 +50,7 @@ function App() {
         >
           view
         </button>
-        <Modal songId={"1"}/>
+        <Modal songId={"1"} />
       </section>
     </div>
   );
