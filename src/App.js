@@ -1,10 +1,14 @@
 import { useState } from "react";
 import "./App.css";
-import Calendar from "./Calendar/Calendar";
 import Form from "./Form/Form";
 import SongView from "./SongView/SongView";
+import NewCalendar from "./Calendar/NewCalendar";
+import dayjs from "dayjs";
 
 function App() {
+  require("dayjs/locale/pl");
+  dayjs.locale("pl");
+
   const [isFormActive, setIsFormActive] = useState(true);
   const [isCalActive, setIsCalActive] = useState(false);
 
@@ -23,7 +27,7 @@ function App() {
       <h1 className="layout__title">bardzo chwytliwa nazwa</h1>
       <section className="layout__view">
         {isFormActive ? <Form /> : null}
-        {isCalActive ? <Calendar /> : null}
+        {isCalActive ? <NewCalendar /> : null}
         {/* <SongView /> */}
       </section>
 

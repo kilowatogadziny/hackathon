@@ -1,3 +1,76 @@
-.calendar {
-  background-color: blue;
+.calendar-root {
+  --grid-gap: 2px;
+  --grid-height: 700px;
+  --text-color-light: rgba(0, 0, 0, 0.4);
+  --text-color-primary: rgba(0, 0, 0, 0.7);
+  --grid-background-color: rgb(211, 205, 198);
+  --grid-foreground-color: white;
+  --space-sm: 4px;
+  --space-md: 8px;
+  --space-lg: 16px;
+  width: 100%;
+}
+
+/* | Sun | Mon | Tue | Wed | Thu | Fri | Sat  */
+.day-of-week-header-cell {
+  color: var(--text-color-primary);
+  background-color: var(--grid-foreground-color);
+  padding: var(--space-md) 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.days-of-week,
+.days-grid {
+  width: 100%;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-column-gap: var(--grid-gap);
+  grid-row-gap: var(--grid-gap);
+}
+
+.days-grid {
+  /*height: var(--grid-height);*/
+  position: relative;
+  border: var(--grid-gap) solid var(--grid-background-color);
+  background-color: var(--grid-background-color);
+}
+
+.day-grid-item-container {
+  position: relative;
+  background-color: var(--grid-foreground-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.day-grid-item-container:not(.current-month) .day-grid-item-header {
+  color: var(--text-color-light);
+}
+
+/* Position the day label within the day cell */
+.day-grid-item-container .day-grid-item-header {
+  color: var(--text-color-primary);
+  padding: var(--space-md);
+  padding-bottom: 0;
+  flex-shrink: 0;
+  font-weight: bold;
+  font-size: 2.5vw;
+}
+
+.day-grid-item-container > .day-content-wrapper {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  aspect-ratio: 1;
+}
+
+.navigation-header {
+  display: flex;
+}
+
+.navigation-header > * {
+  margin: auto;
 }
