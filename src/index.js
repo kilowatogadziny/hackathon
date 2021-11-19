@@ -3,12 +3,11 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import SongView from "./SongView";
+
 
 ReactDOM.render(
     <React.StrictMode>
-        {/*<App />*/}
-        <SongView id={"1"}/>
+        <App/>
     </React.StrictMode>,
     document.getElementById("root")
 );

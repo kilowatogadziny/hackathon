@@ -1,7 +1,7 @@
 //this function eables to save data in firestore
 //todo set proper id if possible?
 import {addDoc, collection} from "firebase/firestore";
-import {db} from "./firebaseConfig";
+import {db} from "../firebaseConfig";
 
 const saveSong = async (song) => {
     const docRef = await addDoc(collection(db, "songs"), {
