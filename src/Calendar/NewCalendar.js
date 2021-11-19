@@ -3,7 +3,7 @@ import { useState } from "react";
 import Calendar, { CalendarDayHeader } from "./calendar.js";
 
 export default function NewCalendar() {
-  const [yearAndMonth, setYearAndMonth] = useState([2021, 9]);
+  const [yearAndMonth, setYearAndMonth] = useState([2021, 11]);
   return (
     <div className="App">
       <Calendar
