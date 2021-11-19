@@ -1,17 +1,49 @@
 import React from "react";
 import "./styles.css";
 import { useInput } from "../hooks/inputHook";
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Form() {
-  const { value: artist, bind: bindArtist, reset: resetArtist } = useInput("");
+  // const { value: artist, bind: bindArtist, reset: resetArtist } = useInput("");
+  const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
   const { value: song, bind: bindSong, reset: resetSong } = useInput("");
   const { value: day, bind: bindDay, reset: resetDay } = useInput("");
+  const [artistList, setArtistList] = useState([]);
+
+  const ARTISTS_URL = "http://newonce-api.herokuapp.com/artists";
+
+  useEffect(() => {
+    fetch(ARTISTS_URL, {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((json) => {
+            setArtistList(json.items);
+          });
+        } else {
+          console.log("something went wrong");
+        }
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    resetArtist();
+    // resetArtist();
     resetSong();
     resetDay();
+  };
+
+  const chooseArtist = (chosenArtistId) => {
+    const chosenArtist = artistList.filter(
+      (artist) => artist.id == chosenArtistId
+    )[0];
+    setArtist(chosenArtist);
+    console.log(chosenArtistId);
+    console.log(chosenArtist);
+    // fetch artist songs
   };
 
   return (
@@ -20,7 +52,17 @@ export default function Form() {
       <form onSubmit={handleSubmit}>
         <label>Artysta:</label>
         <div>
-          <input type="text" {...bindArtist} />
+          {/* <input type="text" {...bindArtist} /> */}
+          <select onChange={(e) => chooseArtist(e.target.value)}>
+            <option value="0"></option>
+            {artistList.length > 0
+              ? artistList.map((artist, key) => (
+                  <option value={artist.id} key={key}>
+                    {artist.name}
+                  </option>
+                ))
+              : null}
+          </select>
         </div>
         <label>Utwór:</label>
         <div>
@@ -32,9 +74,9 @@ export default function Form() {
         </div>
         <input type="submit" value="Dodaj" />
       </form>
-      <p>
-        {artist} {song} {day}
-      </p>
+      <div className="test">
+        <p>chosen artist: {artist.name}</p>
+      </div>
     </div>
   );
 }
