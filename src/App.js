@@ -1,7 +1,8 @@
 import "./App.css";
+import firebase from "firebase/compat/app";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import firebase from "firebase/compat/app";
+import NameForm from "./NameForm";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCRPSk2Y5p-Yl6FHrf_3CBc-G30wb3x698",
@@ -41,6 +42,8 @@ function App() {
       <p>{variable1.field1}</p>
       <p>{variable2.field2}</p>
       <p>{JSON.stringify(variables)}</p>
+
+      <NameForm />
     </div>
   );
 }
