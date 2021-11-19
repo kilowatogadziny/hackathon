@@ -40,7 +40,7 @@ export default function Form() {
 
   const chooseArtist = async (chosenArtistId) => {
     const chosenArtist = artistList.filter(
-      (artist) => artist.id.toString() ==== chosenArtistId
+      (artist) => artist.id.toString() === chosenArtistId
     )[0];
     setArtist(chosenArtist);
     console.log(chosenArtistId);
