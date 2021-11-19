@@ -1,5 +1,5 @@
 import "./App.css";
-import firebase from "firebase/compat/app";
+// import firebase from "firebase/compat/app";
 // import { getFirestore, collection, getDocs } from "firebase/firestore";
 // import { useEffect, useState } from "react";
 import Calendar from "./Calendar/Calendar";
