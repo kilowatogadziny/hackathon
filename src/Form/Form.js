@@ -3,6 +3,8 @@ import React from "react";
 import { useInput } from "../hooks/inputHook";
 import { useState } from "react";
 import { useEffect } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 export default function Form() {
   // const { value: artist, bind: bindArtist, reset: resetArtist } = useInput("");
@@ -10,7 +12,7 @@ export default function Form() {
   const [album, setAlbumSlug] = useState({ id: 0, name: "", slug: "" });
   const [artistsReleases, setArtistsReleases] = useState([]);
   //   const { value: song, bind: bindSong, reset: resetSong } = useInput("");
-  const { value: day, bind: bindDay, reset: resetDay } = useInput("");
+  //   const { value: day, bind: bindDay, reset: resetDay } = useInput("");
   const [artistList, setArtistList] = useState([]);
   const [song, setSong] = useState("");
   const [songsList, setSongsList] = useState([]);
@@ -36,16 +38,9 @@ export default function Form() {
       .catch((error) => console.log(error));
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // resetArtist();
-    // resetSong();
-    resetDay();
-  };
-
   const chooseArtist = async (chosenArtistId) => {
     const chosenArtist = artistList.filter(
-      (artist) => artist.id == chosenArtistId
+      (artist) => artist.id === chosenArtistId.toString()
     )[0];
     setArtist(chosenArtist);
     console.log(chosenArtistId);
@@ -73,9 +68,13 @@ export default function Form() {
     const chosenAlbum = artistsReleases.filter(
       (release) => chosenAlbumId === release.album_id.toString()
     )[0];
-    setAlbumSlug(chosenAlbum.album_slug);
+    setAlbumSlug({
+      id: chosenAlbumId,
+      name: chosenAlbum.album_name,
+      slug: chosenAlbum.album_slug,
+    });
     console.log("chosen album slug");
-    console.log(chosenAlbum.album_slug);
+    console.log(chosenAlbum.album_name);
 
     await getAlbumSongs(chosenAlbum.album_slug);
   };
@@ -120,6 +119,17 @@ export default function Form() {
   };
 
   const responseFromArtistsNotOk = () => {};
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const docRef = await addDoc(collection(db, "songs"), {
+      artist: artist.name,
+      album: album.name,
+      song: song,
+      date: new Date().getDate(),
+    });
+    console.log("Document written with ID: ", docRef.id);
+  };
 
   return (
     <div className="form">
@@ -168,7 +178,7 @@ export default function Form() {
         </div>
         <label>Dzień:</label>
         <div>
-          <input type="text" {...bindDay} />
+          <input type="text" />
         </div>
         <input type="submit" value="Dodaj" />
       </form>
