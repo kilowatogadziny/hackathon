@@ -3,6 +3,7 @@ import "regenerator-runtime/runtime.js";
 import {doc, getDoc} from "firebase/firestore";
 import {useEffect, useState} from "react";
 import {db} from "../firebaseConfig"
+import Modal from "./Modal";
 
 function SongView({id}) {
 
@@ -13,6 +14,16 @@ function SongView({id}) {
         date: "",
         song_title: ""
     }]);
+
+    const state = {
+        show: false
+    };
+
+    showModal = e => {
+        this.setState({
+            show: true
+        });
+    };
 
     useEffect(() => {
         async function fetchData() {
@@ -58,6 +69,23 @@ function SongView({id}) {
             <p>{song.artist_name}</p>
             <p>{song.album_title}</p>
             <p>{song.song_title}</p>
+            <button
+                className="toggle-button"
+                id="centered-toggle-button"
+                onClick={e => {
+                    this.showModal(e);
+                }}
+            >
+                {" "}
+                show Modal{" "}
+            </button>
+
+            <Modal onClose={this.showModal} show={this.state.show}>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis
+                deserunt corrupti, ut fugit magni qui quasi nisi amet repellendus non
+                fuga omnis a sed impedit explicabo accusantium nihil doloremque
+                consequuntur.
+            </Modal>
         </div>
     );
 }
