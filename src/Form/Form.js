@@ -32,6 +32,9 @@ export default function Form() {
         </div>
         <input type="submit" value="Dodaj" />
       </form>
+      <p>
+        {artist} {song} {day}
+      </p>
     </div>
   );
 }
