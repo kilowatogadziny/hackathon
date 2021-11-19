@@ -1,9 +1,12 @@
 import React from "react";
+import "./styles.css";
 
 function Calendar() {
-    return (
-        <p>this is Calendar</p>
-    )
+  return (
+    <div className="calendar">
+      <p>this is Calendar</p>
+    </div>
+  );
 }
 
 export default Calendar;
