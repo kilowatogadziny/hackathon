@@ -4,6 +4,8 @@ import Form from "./Form/Form";
 import SongView from "./SongView/SongView";
 import NewCalendar from "./Calendar/NewCalendar";
 import dayjs from "dayjs";
+import React from "react";
+import Modal from "./SongView/InfoModal";
 
 function App() {
   require("dayjs/locale/pl");
@@ -48,6 +50,7 @@ function App() {
         >
           view
         </button>
+        <Modal songId={"1"}/>
       </section>
     </div>
   );
