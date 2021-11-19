@@ -1,17 +1,26 @@
-import React from "react";
 import "./styles.css";
-import { useInput } from "../hooks/inputHook";
+import React from "react";
+// import { useInput } from "../hooks/inputHook";
 import { useState } from "react";
 import { useEffect } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 export default function Form() {
   // const { value: artist, bind: bindArtist, reset: resetArtist } = useInput("");
   const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
-  const { value: song, bind: bindSong, reset: resetSong } = useInput("");
-  const { value: day, bind: bindDay, reset: resetDay } = useInput("");
+  const [album, setAlbumSlug] = useState({ id: 0, name: "", slug: "" });
+  const [artistsReleases, setArtistsReleases] = useState([]);
+  //   const { value: song, bind: bindSong, reset: resetSong } = useInput("");
+  //   const { value: day, bind: bindDay, reset: resetDay } = useInput("");
   const [artistList, setArtistList] = useState([]);
+  const [song, setSong] = useState("");
+  const [songsList, setSongsList] = useState([]);
 
   const ARTISTS_URL = "http://newonce-api.herokuapp.com/artists";
+  const RELEASES_URL =
+    "http://newonce-api.herokuapp.com/releases?search_query=";
+  const SONGS_URL = "http://newonce-api.herokuapp.com/releases/";
 
   useEffect(() => {
     fetch(ARTISTS_URL, {
@@ -29,21 +38,97 @@ export default function Form() {
       .catch((error) => console.log(error));
   }, []);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // resetArtist();
-    resetSong();
-    resetDay();
-  };
-
-  const chooseArtist = (chosenArtistId) => {
+  const chooseArtist = async (chosenArtistId) => {
     const chosenArtist = artistList.filter(
-      (artist) => artist.id === chosenArtistId
+      (artist) => artist.id.toString() === chosenArtistId
     )[0];
     setArtist(chosenArtist);
     console.log(chosenArtistId);
     console.log(chosenArtist);
     // fetch artist songs
+    await getArtistAlbums(artist.name);
+  };
+
+  const getArtistAlbums = async (artistName) => {
+    let apiUrl = RELEASES_URL + artistName;
+    fetch(apiUrl, {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          responseFromArtistsOk(response);
+        } else {
+          responseFromArtistsNotOk();
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const chooseAlbum = async (chosenAlbumId) => {
+    const chosenAlbum = artistsReleases.filter(
+      (release) => chosenAlbumId === release.album_id.toString()
+    )[0];
+    setAlbumSlug({
+      id: chosenAlbumId,
+      name: chosenAlbum.album_name,
+      slug: chosenAlbum.album_slug,
+    });
+    console.log("chosen album slug");
+    console.log(chosenAlbum.album_name);
+
+    await getAlbumSongs(chosenAlbum.album_slug);
+  };
+
+  const getAlbumSongs = async (albumSlug) => {
+    let apiUrl = SONGS_URL + albumSlug;
+    console.log(apiUrl);
+    fetch(apiUrl, {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          response.json().then((json) => {
+            console.log(json);
+            setSongsList(json.tracklist);
+          });
+        } else {
+          console.log("not okay");
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const chooseSong = (chosenSong) => {
+    setSong(chosenSong);
+  };
+
+  const responseFromArtistsOk = (response) => {
+    response.json().then((json) => {
+      let releases = [];
+      let releasesFromApi = json.items;
+      for (const release of releasesFromApi) {
+        let newRelease = {
+          album_id: release.id,
+          album_name: release.name,
+          album_slug: release.slug,
+        };
+        releases.push(newRelease);
+      }
+      setArtistsReleases(releases);
+    });
+  };
+
+  const responseFromArtistsNotOk = () => {};
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const docRef = await addDoc(collection(db, "songs"), {
+      artist: artist.name,
+      album: album.name,
+      song: song,
+      date: new Date().getDate(),
+    });
+    console.log("Document written with ID: ", docRef.id);
   };
 
   return (
@@ -54,7 +139,7 @@ export default function Form() {
         <div>
           {/* <input type="text" {...bindArtist} /> */}
           <select onChange={(e) => chooseArtist(e.target.value)}>
-            <option value="0" />
+            <option value="0"></option>
             {artistList.length > 0
               ? artistList.map((artist, key) => (
                   <option value={artist.id} key={key}>
@@ -64,22 +149,39 @@ export default function Form() {
               : null}
           </select>
         </div>
+        <label>Album:</label>
+        <div>
+          <select onChange={(e) => chooseAlbum(e.target.value)}>
+            <option value="0"></option>
+            {artistsReleases.length > 0
+              ? artistsReleases.map((release, key) => (
+                  <option value={release.album_id} key={key}>
+                    {release.album_name}
+                  </option>
+                ))
+              : null}
+          </select>
+        </div>
+
         <label>Utwór:</label>
         <div>
-          <input type="text" {...bindSong} />
+          <select onChange={(e) => chooseSong(e.target.value)}>
+            <option value="0"></option>
+            {songsList.length > 0
+              ? songsList.map((song, key) => (
+                  <option value={song.title} key={key}>
+                    {song.title}
+                  </option>
+                ))
+              : null}
+          </select>
         </div>
         <label>Dzień:</label>
         <div>
-          <input type="text" {...bindDay} />
+          <input type="text" />
         </div>
         <input type="submit" value="Dodaj" />
       </form>
-      <div className="test">
-        <p>chosen artist: {artist.name}</p>
-      </div>
-      <p>
-        {song} {day}
-      </p>
     </div>
   );
 }
