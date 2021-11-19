@@ -1,6 +1,7 @@
 import React from "react";
 import "regenerator-runtime/runtime.js";
 import {Badge} from "react-bootstrap";
+import {Form} from "react-bootstrap";
 
 function SongView({song}) {
 
@@ -8,15 +9,15 @@ function SongView({song}) {
         <div className="songview">
             <img src={song.cover_url} className="img-thumbnail"/>
             <h6>
-                <Badge bg="secondary">Tytuł utworu:</Badge><p>{song.song_title}</p>
+                <Badge bg="dark"> Artysta:</Badge> <Form.Label>{song.artist_name}</Form.Label>
             </h6>
             <h6>
-                <Badge bg="secondary">Tytuł albumu:</Badge><p>{song.album_title}</p>
+                <Badge bg="dark">Tytuł albumu:</Badge> <Form.Label>{song.album_title}</Form.Label>
             </h6>
             <h6>
-                <Badge bg="secondary"> Artysta:</Badge><p>{song.artist_name}</p>
+                <Badge bg="dark">Tytuł utworu:</Badge> <Form.Label>{song.song_title}</Form.Label>
             </h6>
-
+            <Form.Label>{song.note}</Form.Label>
         </div>
     );
 }
