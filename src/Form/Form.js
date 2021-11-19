@@ -1,6 +1,6 @@
 import "./styles.css";
 import React from "react";
-import { useInput } from "../hooks/inputHook";
+// import { useInput } from "../hooks/inputHook";
 import { useState } from "react";
 import { useEffect } from "react";
 import { addDoc, collection } from "firebase/firestore";
@@ -40,7 +40,7 @@ export default function Form() {
 
   const chooseArtist = async (chosenArtistId) => {
     const chosenArtist = artistList.filter(
-      (artist) => artist.id === chosenArtistId.toString()
+      (artist) => artist.id.toString() === chosenArtistId
     )[0];
     setArtist(chosenArtist);
     console.log(chosenArtistId);
