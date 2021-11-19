@@ -5,6 +5,7 @@ import "./App.css";
 import Calendar from "./Calendar/Calendar";
 import Form from "./Form/Form";
 import SongView from "./SongView/SongView";
+// import Button from "react-bootstrap/Button";
 
 // const firebaseConfig = {
 //   apiKey: "AIzaSyCRPSk2Y5p-Yl6FHrf_3CBc-G30wb3x698",
@@ -45,6 +46,10 @@ function App() {
       <Calendar />
       <Form />
       <SongView />
+
+      <button type="button" class="btn btn-primary">
+        przykładowy przycisk bootstrapowy
+      </button>
       {/* <p>{variable1}</p>
       <p>{variable2}</p>
       <p>{variables}</p> */}
