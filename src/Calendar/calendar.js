@@ -25,6 +25,7 @@ export default function Calendar({
   renderDay = () => null,
 }) {
   const [year, month] = yearAndMonth;
+  const [selectedDate, setSelectedDate] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
 
   let currentMonthDays = createDaysForCurrentMonth(year, month);
@@ -131,7 +132,10 @@ export default function Calendar({
           >
             <div
               className="day-content-wrapper"
-              onClick={() => setModalVisible(true)}
+              onClick={() => {
+                setSelectedDate(day.dateString);
+                setModalVisible(true);
+              }}
             >
               {renderDay(day)}
             </div>
@@ -139,7 +143,7 @@ export default function Calendar({
         ))}
       </div>
       <InfoModal
-        songId={"1"}
+        songDate={selectedDate}
         isVisible={isModalVisible}
         closeModal={() => closeModal()}
       />
