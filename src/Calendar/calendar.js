@@ -10,7 +10,7 @@ import {
   getYearDropdownOptions,
 } from "./helpers";
 import InfoModal from "../SongView/InfoModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 Calendar.propTypes = {
   className: PropTypes.string,
