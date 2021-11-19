@@ -33,7 +33,7 @@
 }
 
 .days-grid {
-  height: var(--grid-height);
+  /*height: var(--grid-height);*/
   position: relative;
   border: var(--grid-gap) solid var(--grid-background-color);
   background-color: var(--grid-background-color);
@@ -57,12 +57,14 @@
   padding-bottom: 0;
   flex-shrink: 0;
   font-weight: bold;
+  font-size: 2.5vw;
 }
 
 .day-grid-item-container > .day-content-wrapper {
   flex: 1;
   min-height: 0;
   position: relative;
+  aspect-ratio: 1;
 }
 
 .navigation-header {
