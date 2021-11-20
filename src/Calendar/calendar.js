@@ -95,9 +95,22 @@ export default function Calendar({
     setMonthData(monthData);
   };
 
-  const divStyle = (url) => {
-    return { backgroundImage: "url(" + url + ")" };
+  const divStyle = (dateString) => {
+    const a = monthData.filter((data) => data.date == dateString);
+    if (a.length > 0) {
+      console.log(a);
+      return { backgroundImage: "url(" + a[0].cover_url + ")" };
+    }
+    // if (monthData[0]) {
+    //   return { backgroundImage: "url(" + monthData[0].cover_url + ")" };
+    // }
   };
+
+  calendarGridDayObjects.map((day) => {
+    const a = monthData.filter((data) => data.date === day.dateString);
+    if (a.length > 0) console.log(a);
+  });
+  // console.log(monthData);
 
   return (
     <div className="calendar-root">
@@ -151,7 +164,7 @@ export default function Calendar({
               "weekend-day": isWeekendDay(day.dateString),
               "current-month": day.isCurrentMonth,
             })}
-            style={monthData[index] ? divStyle(monthData[index].cover_url) : ""}
+            style={divStyle(day.dateString)}
           >
             <div
               className="day-content-wrapper"
