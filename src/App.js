@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div className="layout">
-      <h1 className="layout__title">bardzo chwytliwa nazwa</h1>
+      <h1 className="text-primary layout__title">piosenka dnia</h1>
       <section className="layout__view">
         {isFormActive ? <Form /> : null}
         {isCalActive ? <NewCalendar /> : null}
@@ -40,7 +40,7 @@ function App() {
           }`}
           onClick={selectForm}
         >
-          add
+          Dodaj utwór
         </button>
         <button
           className={`btn btn-outline-dark layout__select__button ${
@@ -48,7 +48,7 @@ function App() {
           }`}
           onClick={selectCal}
         >
-          view
+          Kalendarz
         </button>
         <Modal songId={"1"} />
       </section>

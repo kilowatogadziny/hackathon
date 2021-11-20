@@ -1,5 +1,62 @@
 .form {
-  background-color: green;
+  /* background-color: white; */
   outline: 1px black;
   text-align: center;
+  height: 100%;
+  overflow: auto;
+}
+.form__title {
+  padding-top: 1rem;
+  /* background-color: red; */
+  text-decoration: underline;
+  text-transform: uppercase;
+}
+.form__subtitle {
+  font-style: italic;
+  padding: 0.5rem;
+}
+.form__field {
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  /* height: 10vh; */
+  margin: 0 auto;
+}
+.form__field > label {
+  display: block;
+}
+
+.form__field__input {
+  width: min(25rem, 85%);
+  display: block;
+  margin: 0 auto;
+  min-width: 5rem;
+}
+
+.form__field__note {
+  width: min(35rem, 95%);
+  display: block;
+  margin: 0 auto;
+}
+
+.form__submit-button {
+  margin: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .form__title {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+  .form__subtitle {
+    padding: 1rem;
+  }
+  .form__field {
+    width: min(40rem, 90%);
+  }
+  .form__submit-button {
+    margin: 1rem 0 1rem auto;
+    /* justify-self: right; */
+    width: min(20rem, 70%);
+  }
 }

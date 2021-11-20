@@ -8,7 +8,11 @@ import moment from "moment";
 import {useInput} from "../hooks/inputHook";
 import SuccessMessage from "./SuccessMessage";
 import FailureMessage from "./FailureMessage";
-import {ap} from "ramda";
+import DatePicker from "react-datepicker";
+import { registerLocale } from "react-datepicker";
+import pl from "date-fns/locale/pl";
+import "react-datepicker/dist/react-datepicker.css";
+registerLocale("pl", pl);
 
 export default function Form() {
     const [artist, setArtist] = useState({id: 0, name: "", slug: ""});
@@ -18,17 +22,13 @@ export default function Form() {
         slug: "",
         cover_url: "",
     });
-    const [artistsReleases, setArtistsReleases] = useState([]);
-    const [artistList, setArtistList] = useState([]);
     const [song, setSong] = useState("");
-    const [songsList, setSongsList] = useState([]);
-    const {value: note, bind: bindNote, reset: resetNote} = useInput("");
-    const {
-        value: date,
-        bind: bindDate,
-        reset: resetDate,
-    } = useInput(moment(new Date()).format("YYYY-MM-DD"));
-    const [isAlert, setIsAlert] = useState(0);
+    const  {value: note, bind: bindNote, reset: resetNote} = useInput("");
+    const [ date,
+        setDate] = useState(new Date());
+    const [isAlert, setIsAlert] = useState(0);const [artistsReleases, setArtistsReleases] = useState([]);
+  const [artistList, setArtistList] = useState([]);
+  const [songsList, setSongsList] = useState([]);
 
     const [articleLinks, setArticleLinks] = useState([]);
 
@@ -56,49 +56,43 @@ export default function Form() {
             .catch((error) => console.log(error));
     }, []);
 
-    const chooseArtist = async (chosenArtistId) => {
-        const chosenArtist = artistList.filter(
-            (artist) => artist.id.toString() === chosenArtistId
-        )[0];
-        setArtist(chosenArtist);
-        console.log(chosenArtistId);
-        console.log(chosenArtist);
-        // fetch artist songs
-        let apiUrl = RELEASES_URL.concat(chosenArtist.name.toString(), "&page=1&per_page=5");
-        console.log(apiUrl)
-        await getArtistAlbums(apiUrl);
-        let articlesUrl = RELATED_ARTICLES_URL.concat(chosenArtist.name.toString(), "&page=1&per_page=3");
-        await getArticleLinks(articlesUrl)
-    };
+  const chooseArtist = async (chosenArtistId) => {
+    const chosenArtist = artistList.filter(
+      (artist) => artist.id.toString() === chosenArtistId
+    )[0];
+    setArtist(chosenArtist);
+    let apiUrl = RELEASES_URL.concat(chosenArtist.name.toString(), "&page=1&per_page=5");
+    console.log(apiUrl)
+    await getArtistAlbums(apiUrl);
+  };
 
-    const getArtistAlbums = async (apiUrl) => {
-        fetch(apiUrl, {
-            method: "GET"
-        })
-            .then((response) => {
-                if (response.ok) {
-                    responseFromArtistsOk(response);
-                } else {
-                    responseFromArtistsNotOk();
-                }
-            })
-            .catch((error) => console.log(error));
-    };
+  const getArtistAlbums = async (apiUrl) => {
+    fetch(apiUrl, {
+      method: "GET",
+    })
+      .then((response) => {
+        if (response.ok) {
+          responseFromArtistsOk(response);
+        } else {
+          responseFromArtistsNotOk();
+        }
+      })
+      .catch((error) => console.log(error));
+  };
 
-    const chooseAlbum = async (chosenAlbumId) => {
-        const chosenAlbum = artistsReleases.filter(
-            (release) => chosenAlbumId === release.album_id.toString()
-        )[0];
-        setAlbum({
-            id: chosenAlbumId,
-            name: chosenAlbum.album_name,
-            slug: chosenAlbum.album_slug,
-            cover_url: chosenAlbum.album_cover_url,
-        });
-        console.log("chosen album slug");
-        console.log(chosenAlbum.album_name);
-        await getAlbumSongs(chosenAlbum.album_slug);
-    };
+  const chooseAlbum = async (chosenAlbumId) => {
+    const chosenAlbum = artistsReleases.filter(
+      (release) => chosenAlbumId === release.album_id.toString()
+    )[0];
+    setAlbum({
+      id: chosenAlbumId,
+      name: chosenAlbum.album_name,
+      slug: chosenAlbum.album_slug,
+      cover_url: chosenAlbum.album_cover_url,
+    });
+
+    await getAlbumSongs(chosenAlbum.album_slug);
+  };
 
     const getAlbumSongs = async (albumSlug) => {
         let apiUrl = SONGS_URL + albumSlug;
@@ -139,42 +133,7 @@ export default function Form() {
         });
     };
 
-    const responseFromArtistsNotOk = () => {
-    };
-
-    const getArticleLinks = (apiUrl) => {
-        fetch(apiUrl, {
-            method: "GET"
-        })
-            .then((response) => {
-                if (response.ok) {
-                    responseFromArticlesOk(response);
-                } else {
-                    responseFromArticlesNotOk();
-                }
-            })
-            .catch((error) => console.log(error));
-    }
-
-    const responseFromArticlesOk = async (response) => {
-        console.log("responseFromArticlesOk")
-        response.json().then((json) => {
-            let articles = [];
-            let articlesFromApi = json.items;
-            for (const release of articlesFromApi) {
-                let newlink = {
-                    link_url: ARTICLE_URL_BASE + release.slug,
-                };
-                articles.push(newlink);
-            }
-            console.log(articles);
-            setArticleLinks(articles);
-        });
-    };
-
-    const responseFromArticlesNotOk = (response) => {
-    };
-
+  const responseFromArtistsNotOk = () => {};
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -184,7 +143,7 @@ export default function Form() {
                 artist_name: artist.name,
                 album_title: album.name,
                 song_title: song,
-                date: date,
+                date: moment(date).format("YYYY-MM-DD"),
                 cover_url: album.cover_url,
                 note: note,
                 links: articleLinks
@@ -208,78 +167,110 @@ export default function Form() {
         }
     };
 
-    const resetFields = () => {
-        resetNote();
-        resetDate();
-        setArtist();
-        setArtist({id: 0, name: "", slug: ""});
-        setAlbum({
-            id: 0,
-            name: "",
-            slug: "",
-            cover_url: "",
-        });
-        setArtistsReleases([]);
-        setSong("");
-        setSongsList([]);
-    };
+  const resetFields = () => {
+    resetNote();
+    setDate(new Date());
+    setArtist();
+    setArtist({ id: 0, name: "", slug: "" });
+    setAlbum({
+      id: 0,
+      name: "",
+      slug: "",
+      cover_url: "",
+    });
+    setArtistsReleases([]);
+    setSong("");
+    setSongsList([]);
+  };
 
-    return (
-        <div className="form">
-            Dodaj
-            <form onSubmit={handleSubmit}>
-                <label>Artysta:</label>
-                <div>
-                    {/* <input type="text" {...bindArtist} /> */}
-                    <select onChange={(e) => chooseArtist(e.target.value)}>
-                        <option value="0"></option>
-                        {artistList.length > 0
-                            ? artistList.map((artist, key) => (
-                                <option value={artist.id} key={key}>
-                                    {artist.name}
-                                </option>
-                            ))
-                            : null}
-                    </select>
-                </div>
-                <label>Album:</label>
-                <div>
-                    <select onChange={(e) => chooseAlbum(e.target.value)}>
-                        <option value="0"></option>
-                        {artistsReleases.length > 0
-                            ? artistsReleases.map((release, key) => (
-                                <option value={release.album_id} key={key}>
-                                    {release.album_name}
-                                </option>
-                            ))
-                            : null}
-                    </select>
-                </div>
+  return (
+    <div className="form">
+      <h2 className="form__title">Dodaj piosenkę na dzisiaj</h2>
+      <h5 className="form__subtitle">I opisz, co ci dzisiaj chodzi po głowie</h5>
+      <fieldset className="form__field">
+        <label>Wybierz dzień:</label>
+        {/* <input type="text" {...bindDate} /> */}
+        <DatePicker
+          selected={date}
+          dateFormat="dd/MM/yyyy"
+          locale="pl"
+          onChange={(date) => setDate(date)}
+          className="form-control form__field__input"
+        />
+      </fieldset>
+      <form onSubmit={handleSubmit}>
+        <fieldset className="form__field">
+          <label>Artysta:</label>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseArtist(e.target.value)}
+            value={artist ? artist.id : 0}
+          >
+            <option value="0"></option>
+            {artistList.length > 0
+              ? artistList.map((artist, key) => (
+                  <option
+                    value={artist.id}
+                    // selected={selected === artist.id}
+                    key={key}
+                  >
+                    {artist.name}
+                  </option>
+                ))
+              : null}
+          </select>
+        </fieldset>
 
-                <label>Utwór:</label>
-                <div>
-                    <select onChange={(e) => chooseSong(e.target.value)}>
-                        <option value="0"></option>
-                        {songsList.length > 0
-                            ? songsList.map((song, key) => (
-                                <option value={song.title} key={key}>
-                                    {song.title}
-                                </option>
-                            ))
-                            : null}
-                    </select>
-                </div>
-                <label>Notatka:</label>
-                <div>
-                    <input type="text" {...bindNote} />
-                </div>
-                <label>Dzień (yyyy-mm-dd):</label>
-                <div>
-                    <input type="text" {...bindDate} />
-                </div>
-                <input type="submit" value="Dodaj"/>
-                <div>{returnAlert()}</div>
-            </form>
-        </div>
-    );
+        <fieldset className="form__field">
+          <label>Album:</label>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseAlbum(e.target.value)}
+          >
+            <option value="0"></option>
+            {artistsReleases.length > 0
+              ? artistsReleases.map((release, key) => (
+                  <option value={release.album_id} key={key}>
+                    {release.album_name}
+                  </option>
+                ))
+              : null}
+          </select>
+        </fieldset>
+
+        <fieldset className="form__field">
+          <label>Utwór:</label>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseSong(e.target.value)}
+          >
+            <option value="0"></option>
+            {songsList.length > 0
+              ? songsList.map((song, key) => (
+                  <option value={song.title} key={key}>
+                    {song.title}
+                  </option>
+                ))
+              : null}
+          </select>
+        </fieldset>
+
+        <fieldset className="form__field">
+          <label>Notatka:</label>
+          <textarea
+            className="form-control form__field__note"
+            type="text"
+            {...bindNote}
+          ></textarea>
+        </fieldset>
+
+        <input
+          className="btn btn-primary form__submit-button"
+          type="submit"
+          value="Dodaj wpis"
+        />
+        <div>{returnAlert()}</div>
+      </form>
+    </div>
+  );
 }
