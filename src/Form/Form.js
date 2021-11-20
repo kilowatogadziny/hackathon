@@ -9,7 +9,7 @@ import { useInput } from "../hooks/inputHook";
 import SuccessMessage from "./SuccessMessage";
 import FailureMessage from "./FailureMessage";
 import DatePicker from "react-datepicker";
-import { registerLocale, setDefaultLocale } from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import pl from "date-fns/locale/pl";
 import "react-datepicker/dist/react-datepicker.css";
 registerLocale("pl", pl);
