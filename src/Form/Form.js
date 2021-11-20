@@ -204,11 +204,16 @@ export default function Form() {
           <select
             className="form-select form__field__input"
             onChange={(e) => chooseArtist(e.target.value)}
+            value={artist ? artist.id : 0}
           >
             <option value="0"></option>
             {artistList.length > 0
               ? artistList.map((artist, key) => (
-                  <option value={artist.id} key={key}>
+                  <option
+                    value={artist.id}
+                    // selected={selected === artist.id}
+                    key={key}
+                  >
                     {artist.name}
                   </option>
                 ))
