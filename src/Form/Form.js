@@ -1,11 +1,11 @@
 import "./styles.css";
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { addDoc, collection } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import {useState} from "react";
+import {useEffect} from "react";
+import {addDoc, collection} from "firebase/firestore";
+import {db} from "../firebaseConfig";
 import moment from "moment";
-import { useInput } from "../hooks/inputHook";
+import {useInput} from "../hooks/inputHook";
 import SuccessMessage from "./SuccessMessage";
 import FailureMessage from "./FailureMessage";
 import DatePicker from "react-datepicker";
@@ -15,54 +15,53 @@ import "react-datepicker/dist/react-datepicker.css";
 registerLocale("pl", pl);
 
 export default function Form() {
-  const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
-  const [album, setAlbum] = useState({
-    id: 0,
-    name: "",
-    slug: "",
-    cover_url: "",
-  });
-  const [song, setSong] = useState("");
-  const { value: note, bind: bindNote, reset: resetNote } = useInput("");
-  const [date, setDate] = useState(new Date());
-
-  const [isAlert, setIsAlert] = useState(0);
-
-  const [artistsReleases, setArtistsReleases] = useState([]);
+    const [artist, setArtist] = useState({id: 0, name: "", slug: ""});
+    const [album, setAlbum] = useState({
+        id: 0,
+        name: "",
+        slug: "",
+        cover_url: "",
+    });
+    const [song, setSong] = useState("");
+    const  {value: note, bind: bindNote, reset: resetNote} = useInput("");
+    const [ date,
+        setDate] = useState(new Date());
+    const [isAlert, setIsAlert] = useState(0);const [artistsReleases, setArtistsReleases] = useState([]);
   const [artistList, setArtistList] = useState([]);
   const [songsList, setSongsList] = useState([]);
 
-  const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
-  const RELEASES_URL =
-    "https://newonce-api.herokuapp.com/releases?search_query=";
-  const SONGS_URL = "https://newonce-api.herokuapp.com/releases/";
+    const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
+    const RELEASES_URL =
+        "https://newonce-api.herokuapp.com/releases?search_query=";
+    const SONGS_URL = "https://newonce-api.herokuapp.com/releases/";
 
-  useEffect(() => {
-    fetch(ARTISTS_URL, {
-      method: "GET",
-    })
-      .then((response) => {
-        if (response.ok) {
-          response.json().then((json) => {
-            setArtistList(json.items);
-          });
-        } else {
-          console.log("something went wrong");
-        }
-      })
-      .catch((error) => console.log(error));
-  }, []);
+    useEffect(() => {
+        fetch(ARTISTS_URL, {
+            method: "GET",
+        })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then((json) => {
+                        setArtistList(json.items);
+                    });
+                } else {
+                    console.log("something went wrong");
+                }
+            })
+            .catch((error) => console.log(error));
+    }, []);
 
   const chooseArtist = async (chosenArtistId) => {
     const chosenArtist = artistList.filter(
       (artist) => artist.id.toString() === chosenArtistId
     )[0];
     setArtist(chosenArtist);
-    await getArtistAlbums(artist.name);
+    let apiUrl = RELEASES_URL.concat(chosenArtist.name.toString(), "&page=1&per_page=5");
+    console.log(apiUrl)
+    await getArtistAlbums(apiUrl);
   };
 
-  const getArtistAlbums = async (artistName) => {
-    let apiUrl = RELEASES_URL + artistName;
+  const getArtistAlbums = async (apiUrl) => {
     fetch(apiUrl, {
       method: "GET",
     })
@@ -90,76 +89,76 @@ export default function Form() {
     await getAlbumSongs(chosenAlbum.album_slug);
   };
 
-  const getAlbumSongs = async (albumSlug) => {
-    let apiUrl = SONGS_URL + albumSlug;
-    fetch(apiUrl, {
-      method: "GET",
-    })
-      .then((response) => {
-        if (response.ok) {
-          response.json().then((json) => {
-            console.log(json);
-            setSongsList(json.tracklist);
-          });
-        } else {
-          console.log("not okay");
-        }
-      })
-      .catch((error) => console.log(error));
-  };
+    const getAlbumSongs = async (albumSlug) => {
+        let apiUrl = SONGS_URL + albumSlug;
+        fetch(apiUrl, {
+            method: "GET",
+        })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then((json) => {
+                        console.log(json);
+                        setSongsList(json.tracklist);
+                    });
+                } else {
+                    console.log("not okay");
+                }
+            })
+            .catch((error) => console.log(error));
+    };
 
-  const chooseSong = (chosenSong) => {
-    setSong(chosenSong);
-  };
+    const chooseSong = (chosenSong) => {
+        setSong(chosenSong);
+    };
 
-  const responseFromArtistsOk = (response) => {
-    response.json().then((json) => {
-      let releases = [];
-      let releasesFromApi = json.items;
-      for (const release of releasesFromApi) {
-        let newRelease = {
-          album_id: release.id,
-          album_name: release.name,
-          album_slug: release.slug,
-          album_cover_url: release.image.url,
-        };
-        releases.push(newRelease);
-      }
-      setArtistsReleases(releases);
-    });
-  };
+    const responseFromArtistsOk = (response) => {
+        response.json().then((json) => {
+            let releases = [];
+            let releasesFromApi = json.items;
+            for (const release of releasesFromApi) {
+                let newRelease = {
+                    album_id: release.id,
+                    album_name: release.name,
+                    album_slug: release.slug,
+                    album_cover_url: release.image.url,
+                };
+                releases.push(newRelease);
+            }
+            setArtistsReleases(releases);
+        });
+    };
 
   const responseFromArtistsNotOk = () => {};
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const docRef = await addDoc(collection(db, "songs"), {
-        artist_name: artist.name,
-        album_title: album.name,
-        song_title: song,
-        date: moment(date).format("YYYY-MM-DD"),
-        cover_url: album.cover_url,
-        note: note,
-      });
-      console.log("Document written with ID: ", docRef.id);
-      setIsAlert(1);
-    } catch (error) {
-      console.log("Error during saving to db");
-      setIsAlert(-1);
-    }
-    resetFields();
-  };
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const docRef = await addDoc(collection(db, "songs"), {
+                artist_name: artist.name,
+                album_title: album.name,
+                song_title: song,
+                date: moment(date).format("YYYY-MM-DD"),
+                cover_url: album.cover_url,
+                note: note,
+            });
+            console.log("Document written with ID: ", docRef.id);
+            setIsAlert(1);
+        } catch (error) {
+            console.log("Error during saving to db");
+            setIsAlert(-1);
+        }
+        resetFields();
+    };
 
-  const returnAlert = () => {
-    if (isAlert === 1) {
-      return <SuccessMessage />;
-    } else if (isAlert === -1) {
-      return <FailureMessage />;
-    } else {
-      return null;
-    }
-  };
+    const returnAlert = () => {
+        if (isAlert === 1) {
+            return <SuccessMessage/>;
+        } else if (isAlert === -1) {
+            return <FailureMessage/>;
+        } else {
+            return null;
+        }
+    };
 
   const resetFields = () => {
     resetNote();
@@ -180,9 +179,9 @@ export default function Form() {
   return (
     <div className="form">
       <h2 className="form__title">Dodaj piosenkę na dzisiaj</h2>
-      <h5 className="form__subtitle">I opisz co ci dzisiaj chodzi po głowie</h5>
+      <h5 className="form__subtitle">I opisz, co ci dzisiaj chodzi po głowie</h5>
       <fieldset className="form__field">
-        <label>wybierz dzień:</label>
+        <label>Wybierz dzień:</label>
         {/* <input type="text" {...bindDate} /> */}
         <DatePicker
           selected={date}
