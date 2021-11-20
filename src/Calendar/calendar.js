@@ -103,7 +103,10 @@ export default function Calendar({
     const a = monthData.filter((data) => data.date === dateString);
     if (a.length > 0) {
       console.log(a);
-      return { backgroundImage: "url(" + a[0].cover_url + ")" };
+      return {
+        backgroundImage: "url(" + a[0].cover_url + ")",
+        backgroundSize: "cover",
+      };
     }
   };
 
