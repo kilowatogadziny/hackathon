@@ -14,7 +14,7 @@ import pl from "date-fns/locale/pl";
 import "react-datepicker/dist/react-datepicker.css";
 registerLocale("pl", pl);
 
-export default function Form() {
+export default function Form({ defaultDate }) {
   const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
   const [album, setAlbum] = useState({
     id: 0,
@@ -24,7 +24,7 @@ export default function Form() {
   });
   const [song, setSong] = useState("");
   const { value: note, bind: bindNote, reset: resetNote } = useInput("");
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(defaultDate ? defaultDate : new Date());
 
   const [isAlert, setIsAlert] = useState(0);
 
@@ -36,6 +36,7 @@ export default function Form() {
   const RELEASES_URL =
     "https://newonce-api.herokuapp.com/releases?search_query=";
   const SONGS_URL = "https://newonce-api.herokuapp.com/releases/";
+  console.log(defaultDate ? defaultDate : "nie ma");
 
   useEffect(() => {
     fetch(ARTISTS_URL, {

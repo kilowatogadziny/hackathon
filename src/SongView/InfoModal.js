@@ -66,36 +66,44 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
   };
 
   const conditionalForm = () => {
-    if (!song.artist_name) {
-      return (
-        <>
-          <Modal.Header closeButton className="modal-header" />
-          <Form />
-          <Modal.Footer className="modal-footer">
-            <Button variant="dark" onClick={handleClose}>
-              Zamknij
-            </Button>
-          </Modal.Footer>
-        </>
+    if (songDate) {
+      const chosenDate = new Date(
+        songDate.substring(0, 4),
+        songDate.substring(5, 7),
+        songDate.substring(8, 10)
       );
-    } else {
-      return (
-        <>
-          <Modal.Header closeButton className="modal-header">
-            <Modal.Title className="modal-title">
-              Piosenka z dnia: {song.date}
-            </Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <SongView song={song} />
-          </Modal.Body>
-          <Modal.Footer className="modal-footer">
-            <Button variant="dark" onClick={handleClose}>
-              Zamknij
-            </Button>
-          </Modal.Footer>
-        </>
-      );
+      console.log(chosenDate);
+      if (!song.artist_name) {
+        return (
+          <>
+            <Modal.Header closeButton className="modal-header" />
+            <Form defaultDate={chosenDate} />
+            <Modal.Footer className="modal-footer">
+              <Button variant="dark" onClick={handleClose}>
+                Zamknij
+              </Button>
+            </Modal.Footer>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Modal.Header closeButton className="modal-header">
+              <Modal.Title className="modal-title">
+                Piosenka z dnia: {song.date}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <SongView song={song} />
+            </Modal.Body>
+            <Modal.Footer className="modal-footer">
+              <Button variant="dark" onClick={handleClose}>
+                Zamknij
+              </Button>
+            </Modal.Footer>
+          </>
+        );
+      }
     }
   };
 
