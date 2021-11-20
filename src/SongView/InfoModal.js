@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import SongView from "./SongView";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import "./styles.css";
+import Form from "../Form/Form";
 
 export default function InfoModal({ songDate, isVisible, closeModal }) {
   //   const [show, setShow] = useState(false);
@@ -54,7 +55,7 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
   }, [songDate]);
 
   const toSongOfDayObject = (data) => {
-    const song = {
+    return {
       album_title: data.album_title,
       artist_name: data.artist_name,
       cover_url: data.cover_url,
@@ -62,7 +63,40 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
       song_title: data.song_title,
       note: data.note,
     };
-    return song;
+  };
+
+  const conditionalForm = () => {
+    if (!song.artist_name) {
+      return (
+        <>
+          <Modal.Header closeButton className="modal-header" />
+          <Form />
+          <Modal.Footer className="modal-footer">
+            <Button variant="dark" onClick={handleClose}>
+              Zamknij
+            </Button>
+          </Modal.Footer>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Modal.Header closeButton className="modal-header">
+            <Modal.Title className="modal-title">
+              Piosenka z dnia: {song.date}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <SongView song={song} />
+          </Modal.Body>
+          <Modal.Footer className="modal-footer">
+            <Button variant="dark" onClick={handleClose}>
+              Zamknij
+            </Button>
+          </Modal.Footer>
+        </>
+      );
+    }
   };
 
   return (
@@ -78,19 +112,7 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
         dialogClassName={"primaryModal"}
         onHide={handleClose}
       >
-        <Modal.Header closeButton className="modal-header">
-          <Modal.Title className="modal-title">
-            Piosenka z dnia: {song.date}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <SongView song={song} />
-        </Modal.Body>
-        <Modal.Footer className="modal-footer">
-          <Button variant="dark" onClick={handleClose}>
-            Zamknij
-          </Button>
-        </Modal.Footer>
+        {conditionalForm()}
       </Modal>
     </div>
   );
