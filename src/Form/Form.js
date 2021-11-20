@@ -9,7 +9,10 @@ import { useInput } from "../hooks/inputHook";
 import SuccessMessage from "./SuccessMessage";
 import FailureMessage from "./FailureMessage";
 import DatePicker from "react-datepicker";
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import pl from "date-fns/locale/pl";
 import "react-datepicker/dist/react-datepicker.css";
+registerLocale("pl", pl);
 
 export default function Form() {
   const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
@@ -19,18 +22,15 @@ export default function Form() {
     slug: "",
     cover_url: "",
   });
+  const [song, setSong] = useState("");
+  const { value: note, bind: bindNote, reset: resetNote } = useInput("");
+  const [date, setDate] = useState(new Date());
+
+  const [isAlert, setIsAlert] = useState(0);
+
   const [artistsReleases, setArtistsReleases] = useState([]);
   const [artistList, setArtistList] = useState([]);
-  const [song, setSong] = useState("");
   const [songsList, setSongsList] = useState([]);
-  const { value: note, bind: bindNote, reset: resetNote } = useInput("");
-  // const {
-  //   value: date,
-  //   bind: bindDate,
-  //   reset: resetDate,
-  // } = useInput(moment(new Date()).format("YYYY-MM-DD"));
-  const [date, setDate] = useState(new Date());
-  const [isAlert, setIsAlert] = useState(0);
 
   const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
   const RELEASES_URL =
@@ -58,9 +58,6 @@ export default function Form() {
       (artist) => artist.id.toString() === chosenArtistId
     )[0];
     setArtist(chosenArtist);
-    console.log(chosenArtistId);
-    console.log(chosenArtist);
-    // fetch artist songs
     await getArtistAlbums(artist.name);
   };
 
@@ -89,15 +86,12 @@ export default function Form() {
       slug: chosenAlbum.album_slug,
       cover_url: chosenAlbum.album_cover_url,
     });
-    console.log("chosen album slug");
-    console.log(chosenAlbum.album_name);
 
     await getAlbumSongs(chosenAlbum.album_slug);
   };
 
   const getAlbumSongs = async (albumSlug) => {
     let apiUrl = SONGS_URL + albumSlug;
-    console.log(apiUrl);
     fetch(apiUrl, {
       method: "GET",
     })
@@ -149,7 +143,6 @@ export default function Form() {
         note: note,
       });
       console.log("Document written with ID: ", docRef.id);
-      // console.log(moment(date).format("YYYY-MM-DD"));
       setIsAlert(1);
     } catch (error) {
       console.log("Error during saving to db");
@@ -194,6 +187,7 @@ export default function Form() {
         <DatePicker
           selected={date}
           dateFormat="dd/MM/yyyy"
+          locale="pl"
           onChange={(date) => setDate(date)}
           className="form-control form__field__input"
         />
