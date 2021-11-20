@@ -6,7 +6,7 @@
   /* background-color: red; */
 }
 .layout__title {
-  justify-self: right;
+  justify-self: center;
   margin-right: 2rem;
   text-decoration: underline;
 }

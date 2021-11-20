@@ -181,10 +181,8 @@ export default function Form({ defaultDate }) {
 
   return (
     <div className="form">
-      <h2 className="form__title">Dodaj piosenkę na dzisiaj</h2>
-      <h5 className="form__subtitle">
-        I opisz, co ci dzisiaj chodzi po głowie
-      </h5>
+      <h2 className="form__title">Co najlepszego dziś usłyszałeś/aś?</h2>
+      <h5 className="form__subtitle">Opisz, co Ci dzisiaj chodzi po głowie!</h5>
       <fieldset className="form__field">
         <label>Wybierz dzień:</label>
         {/* <input type="text" {...bindDate} /> */}
@@ -204,7 +202,7 @@ export default function Form({ defaultDate }) {
             onChange={(e) => chooseArtist(e.target.value)}
             value={artist ? artist.id : 0}
           >
-            <option value="0"></option>
+            <option value="0" />
             {artistList.length > 0
               ? artistList.map((artist, key) => (
                   <option
@@ -225,7 +223,7 @@ export default function Form({ defaultDate }) {
             className="form-select form__field__input"
             onChange={(e) => chooseAlbum(e.target.value)}
           >
-            <option value="0"></option>
+            <option value="0" />
             {artistsReleases.length > 0
               ? artistsReleases.map((release, key) => (
                   <option value={release.album_id} key={key}>
@@ -242,7 +240,7 @@ export default function Form({ defaultDate }) {
             className="form-select form__field__input"
             onChange={(e) => chooseSong(e.target.value)}
           >
-            <option value="0"></option>
+            <option value="0" />
             {songsList.length > 0
               ? songsList.map((song, key) => (
                   <option value={song.title} key={key}>
@@ -259,7 +257,7 @@ export default function Form({ defaultDate }) {
             className="form-control form__field__note"
             type="text"
             {...bindNote}
-          ></textarea>
+          />
         </fieldset>
 
         <input
