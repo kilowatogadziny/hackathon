@@ -7,13 +7,13 @@ dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
 
 export const daysOfWeek = [
-  "Niedziela",
   "Poniedziałek",
   "Wtorek",
   "Środa",
   "Czwartek",
   "Piątek",
   "Sobota",
+  "Niedziela",
 ];
 
 export function getYearDropdownOptions(currentYear) {

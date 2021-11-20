@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Button, Modal } from "react-bootstrap";
 import SongView from "./SongView";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import "./styles.css";
+import Form from "../Form/Form";
 
 export default function InfoModal({ songDate, isVisible, closeModal }) {
-  //   const [show, setShow] = useState(false);
   const handleClose = () => closeModal();
-  //   const handleShow = () => setShow(true);
 
   const [song, setSong] = useState([
     {
@@ -46,7 +45,6 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
         console.log("No such document!");
       }
 
-      console.log(songOfDay);
       setSong(songOfDay);
     }
 
@@ -54,7 +52,7 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
   }, [songDate]);
 
   const toSongOfDayObject = (data) => {
-    const song = {
+    return {
       album_title: data.album_title,
       artist_name: data.artist_name,
       cover_url: data.cover_url,
@@ -62,15 +60,56 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
       song_title: data.song_title,
       note: data.note,
     };
-    return song;
+  };
+
+  const formatDate = (date) => {
+    const dateToFormat = date.split("-");
+    return dateToFormat[2] + "-" + dateToFormat[1] + "-" + dateToFormat[0];
+  };
+
+  const conditionalForm = () => {
+    if (songDate) {
+      const chosenDate = new Date(
+        songDate.substring(0, 4),
+        songDate.substring(5, 7) - 1,
+        songDate.substring(8, 10)
+      );
+      if (!song.artist_name) {
+        return (
+          <>
+            <Modal.Header closeButton className="modal-header" />
+            <Form defaultDate={chosenDate} />
+            <Modal.Footer className="modal-footer">
+              <Button variant="dark" onClick={handleClose}>
+                Zamknij
+              </Button>
+            </Modal.Footer>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Modal.Header closeButton className="modal-header">
+              <Modal.Title className="modal-title">
+                Piosenka z dnia: {formatDate(song.date)}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <SongView song={song} />
+            </Modal.Body>
+            <Modal.Footer className="modal-footer">
+              <Button variant="dark" onClick={handleClose}>
+                Zamknij
+              </Button>
+            </Modal.Footer>
+          </>
+        );
+      }
+    }
   };
 
   return (
     <div className="modalSongView">
-      {/* <Button className="nextButton" onClick={handleShow}>
-        Open Modal
-      </Button> */}
-
       <Modal
         centered
         scrollable={true}
@@ -78,19 +117,7 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
         dialogClassName={"primaryModal"}
         onHide={handleClose}
       >
-        <Modal.Header closeButton className="modal-header">
-          <Modal.Title className="modal-title">
-            Piosenka z dnia: {song.date}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <SongView song={song} />
-        </Modal.Body>
-        <Modal.Footer className="modal-footer">
-          <Button variant="dark" onClick={handleClose}>
-            Zamknij
-          </Button>
-        </Modal.Footer>
+        {conditionalForm()}
       </Modal>
     </div>
   );
