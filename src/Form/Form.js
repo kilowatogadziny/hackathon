@@ -5,6 +5,8 @@ import {useEffect} from "react";
 import {addDoc, collection} from "firebase/firestore";
 import {db} from "../firebaseConfig";
 import moment from "moment";
+import SuccessMessage from "./SuccessMessage"
+import FailureMessage from "./FailureMessage"
 
 export default function Form() {
     const [artist, setArtist] = useState({id: 0, name: "", slug: ""});
@@ -13,6 +15,7 @@ export default function Form() {
     const [artistList, setArtistList] = useState([]);
     const [song, setSong] = useState("");
     const [songsList, setSongsList] = useState([]);
+    const [isAlert, setIsAlert] = useState(0);
 
     const ARTISTS_URL = "http://newonce-api.herokuapp.com/artists";
     const RELEASES_URL = "http://newonce-api.herokuapp.com/releases?search_query=";
@@ -123,15 +126,33 @@ export default function Form() {
         let dateString = moment(new Date()).format('YYYY-MM-DD');
         console.log(dateString) //
         event.preventDefault();
-        const docRef = await addDoc(collection(db, "songs"), {
-            artist: artist.name,
-            album: album.name,
-            song: song,
-            date: dateString,
-            cover_url: album.cover_url
-        });
-        console.log("Document written with ID: ", docRef.id);
+        try {
+            const docRef = await addDoc(collection(db, "songs"), {
+                artist: artist.name,
+                album: album.name,
+                song: song,
+                date: dateString,
+                cover_url: album.cover_url
+            });
+            console.log("Document written with ID: ", docRef.id);
+            setIsAlert(1);
+        } catch (error) {
+            console.log("Error during saving to db")
+            setIsAlert(-1)
+        }
     };
+
+    const returnAlert = () => {
+        {
+            if (isAlert === 1) {
+                return <SuccessMessage/>
+            } else if (isAlert === -1) {
+                return <FailureMessage/>
+            } else {
+                return null;
+            }
+        }
+    }
 
     return (
         <div className="form">
@@ -183,6 +204,9 @@ export default function Form() {
                     <input type="text"/>
                 </div>
                 <input type="submit" value="Dodaj"/>
+                <div>
+                    {returnAlert()}
+                </div>
             </form>
         </div>
     );
