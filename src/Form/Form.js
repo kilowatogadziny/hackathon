@@ -34,7 +34,6 @@ export default function Form({ defaultDate }) {
   const RELEASES_URL =
     "https://newonce-api.herokuapp.com/releases?search_query=";
   const SONGS_URL = "https://newonce-api.herokuapp.com/releases/";
-  console.log(defaultDate ? defaultDate : "nie ma");
 
   useEffect(() => {
     fetch(ARTISTS_URL, {

@@ -47,7 +47,7 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
         console.log("No such document!");
       }
 
-      console.log(songOfDay);
+      // console.log(songOfDay);
       setSong(songOfDay);
     }
 
@@ -73,7 +73,7 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
 
   const conditionalForm = () => {
     if (songDate) {
-      console.log(songDate.substring(5, 7));
+      // console.log(songDate.substring(5, 7));
       const chosenDate = new Date(
         songDate.substring(0, 4),
         songDate.substring(5, 7) - 1,

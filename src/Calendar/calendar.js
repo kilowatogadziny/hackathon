@@ -75,8 +75,9 @@ export default function Calendar({
     onYearAndMonthChange([nextYear, nextMonth]);
   };
 
-  const closeModal = () => {
+  const closeModal = async () => {
     setModalVisible(false);
+    await loadMonthData();
   };
 
   useEffect(() => {
