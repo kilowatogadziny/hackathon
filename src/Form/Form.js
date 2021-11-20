@@ -6,23 +6,23 @@ import { addDoc, collection } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import moment from "moment";
 import { useInput } from "../hooks/inputHook";
-import SuccessMessage from "./SuccessMessage"
-import FailureMessage from "./FailureMessage"
+import SuccessMessage from "./SuccessMessage";
+import FailureMessage from "./FailureMessage";
 
 export default function Form() {
-    const [artist, setArtist] = useState({id: 0, name: "", slug: ""});
-    const [album, setAlbum] = useState({
-        id: 0,
-        name: "",
-        slug: "",
-        cover_url: "",
-    });
-    const [artistsReleases, setArtistsReleases] = useState([]);
-    const [artistList, setArtistList] = useState([]);
-    const [song, setSong] = useState("");
-    const [songsList, setSongsList] = useState([]);
-    const { value: note, bind: bindNote, reset: resetNote } = useInput("");
-    const [isAlert, setIsAlert] = useState(0);
+  const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
+  const [album, setAlbum] = useState({
+    id: 0,
+    name: "",
+    slug: "",
+    cover_url: "",
+  });
+  const [artistsReleases, setArtistsReleases] = useState([]);
+  const [artistList, setArtistList] = useState([]);
+  const [song, setSong] = useState("");
+  const [songsList, setSongsList] = useState([]);
+  const { value: note, bind: bindNote, reset: resetNote } = useInput("");
+  const [isAlert, setIsAlert] = useState(0);
 
   const ARTISTS_URL = "http://newonce-api.herokuapp.com/artists";
   const RELEASES_URL =
@@ -129,55 +129,53 @@ export default function Form() {
 
   const responseFromArtistsNotOk = () => {};
 
-    const handleSubmit = async (event) => {
-        let dateString = moment(new Date()).format('YYYY-MM-DD');
-        console.log(dateString) //
-        event.preventDefault();
-        try {
-            const docRef = await addDoc(collection(db, "songs"), {
-                artist: artist.name,
-                album: album.name,
-                song: song,
-                date: dateString,
-                cover_url: album.cover_url,
-                note: note,
-            });
-            console.log("Document written with ID: ", docRef.id);
-            setIsAlert(1);
-        } catch (error) {
-            console.log("Error during saving to db")
-            setIsAlert(-1)
-        }
-        resetFields();
-    };
-
-    const returnAlert = () => {
-        {
-            if (isAlert === 1) {
-                return <SuccessMessage/>
-            } else if (isAlert === -1) {
-                return <FailureMessage/>
-            } else {
-                return null;
-            }
-        }
+  const handleSubmit = async (event) => {
+    let dateString = moment(new Date()).format("YYYY-MM-DD");
+    console.log(dateString); //
+    event.preventDefault();
+    try {
+      const docRef = await addDoc(collection(db, "songs"), {
+        artist: artist.name,
+        album: album.name,
+        song: song,
+        date: dateString,
+        cover_url: album.cover_url,
+        note: note,
+      });
+      console.log("Document written with ID: ", docRef.id);
+      setIsAlert(1);
+    } catch (error) {
+      console.log("Error during saving to db");
+      setIsAlert(-1);
     }
+    resetFields();
+  };
 
-    const resetFields = () => {
-        resetNote();
-        setArtist();
-        setArtist({ id: 0, name: "", slug: "" });
-        setAlbum({
-            id: 0,
-            name: "",
-            slug: "",
-            cover_url: "",
-        });
-        setArtistsReleases([]);
-        setArtistList([]);
-        setSong("");
-        setSongsList([]);
-    };
+  const returnAlert = () => {
+    if (isAlert === 1) {
+      return <SuccessMessage />;
+    } else if (isAlert === -1) {
+      return <FailureMessage />;
+    } else {
+      return null;
+    }
+  };
+
+  const resetFields = () => {
+    resetNote();
+    setArtist();
+    setArtist({ id: 0, name: "", slug: "" });
+    setAlbum({
+      id: 0,
+      name: "",
+      slug: "",
+      cover_url: "",
+    });
+    setArtistsReleases([]);
+    setArtistList([]);
+    setSong("");
+    setSongsList([]);
+  };
 
   return (
     <div className="form">
@@ -229,14 +227,12 @@ export default function Form() {
           <input type="text" {...bindNote} />
         </div>
         <label>Dzień:</label>
-                <div>
-                    <input type="text"/>
-                </div>
-                <input type="submit" value="Dodaj"/>
-                <div>
-                    {returnAlert()}
-                </div>
-            </form>
+        <div>
+          <input type="text" />
+        </div>
+        <input type="submit" value="Dodaj" />
+        <div>{returnAlert()}</div>
+      </form>
     </div>
   );
 }

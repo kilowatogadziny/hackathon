@@ -11,7 +11,7 @@ import {
 } from "./helpers";
 import InfoModal from "../SongView/InfoModal";
 import { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
 Calendar.propTypes = {
@@ -80,8 +80,12 @@ export default function Calendar({
     setModalVisible(false);
   };
 
-  useEffect(async () => {
-    await loadMonthData();
+  useEffect(() => {
+    async function awaitData() {
+      await loadMonthData();
+    }
+
+    awaitData();
   }, []);
 
   const loadMonthData = async () => {
@@ -96,21 +100,12 @@ export default function Calendar({
   };
 
   const divStyle = (dateString) => {
-    const a = monthData.filter((data) => data.date == dateString);
+    const a = monthData.filter((data) => data.date === dateString);
     if (a.length > 0) {
       console.log(a);
       return { backgroundImage: "url(" + a[0].cover_url + ")" };
     }
-    // if (monthData[0]) {
-    //   return { backgroundImage: "url(" + monthData[0].cover_url + ")" };
-    // }
   };
-
-  calendarGridDayObjects.map((day) => {
-    const a = monthData.filter((data) => data.date === day.dateString);
-    if (a.length > 0) console.log(a);
-  });
-  // console.log(monthData);
 
   return (
     <div className="calendar-root">
