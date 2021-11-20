@@ -65,6 +65,12 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
     };
   };
 
+  const formatDate = (date) => {
+    const dateToFormat = date.split("-");
+    console.log(dateToFormat);
+    return dateToFormat[2] + "-" + dateToFormat[1] + "-" + dateToFormat[0];
+  };
+
   const conditionalForm = () => {
     if (!song.artist_name) {
       return (
@@ -83,7 +89,7 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
         <>
           <Modal.Header closeButton className="modal-header">
             <Modal.Title className="modal-title">
-              Piosenka z dnia: {song.date}
+              Piosenka z dnia: {formatDate(song.date)}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
