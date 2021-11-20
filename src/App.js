@@ -40,7 +40,7 @@ function App() {
           }`}
           onClick={selectForm}
         >
-          add
+          Dodaj utwór
         </button>
         <button
           className={`btn btn-outline-dark layout__select__button ${
@@ -48,7 +48,7 @@ function App() {
           }`}
           onClick={selectCal}
         >
-          view
+          Kalendarz
         </button>
         <Modal songId={"1"} />
       </section>
