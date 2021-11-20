@@ -21,7 +21,6 @@ Calendar.propTypes = {
   renderDay: PropTypes.func,
 };
 export default function Calendar({
-  className = "",
   yearAndMonth = [2021, 11],
   onYearAndMonthChange,
   renderDay = () => null,
@@ -114,8 +113,18 @@ export default function Calendar({
     <div className="calendar-root">
       <div className="navigation-header mt-2">
         <div className="month-nav-arrow-buttons">
-          <button onClick={handleMonthNavBackButtonClick}>poprzedni</button>
-          <button onClick={handleMonthNavForwardButtonClick}>następny</button>
+          <button
+            className="btn btn-outline-dark p-1 m-1"
+            onClick={handleMonthNavBackButtonClick}
+          >
+            poprzedni
+          </button>
+          <button
+            className="btn btn-outline-dark p-1"
+            onClick={handleMonthNavForwardButtonClick}
+          >
+            następny
+          </button>
         </div>
         <div>
           <select
@@ -155,7 +164,7 @@ export default function Calendar({
         ))}
       </div>
       <div className="days-grid">
-        {calendarGridDayObjects.map((day, index) => (
+        {calendarGridDayObjects.map((day) => (
           <div
             key={day.dateString}
             className={classNames("day-grid-item-container", {

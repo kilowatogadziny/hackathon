@@ -45,6 +45,10 @@
   display: flex;
   flex-direction: column;
 }
+.day-grid-item-container:hover {
+  transform: scale(1.1);
+  -webkit-transition: all 0.1s ease-in;
+}
 
 .day-grid-item-container:not(.current-month) .day-grid-item-header {
   color: var(--text-color-light);
