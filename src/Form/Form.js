@@ -30,15 +30,10 @@ export default function Form() {
   const [artistList, setArtistList] = useState([]);
   const [songsList, setSongsList] = useState([]);
 
-    const [articleLinks, setArticleLinks] = useState([]);
-
     const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
     const RELEASES_URL =
         "https://newonce-api.herokuapp.com/releases?search_query=";
     const SONGS_URL = "https://newonce-api.herokuapp.com/releases/";
-
-    const RELATED_ARTICLES_URL = "https://newonce-api.herokuapp.com/related/articles?search_query="
-    const ARTICLE_URL_BASE = "https://newonce.net/artykul/";
 
     useEffect(() => {
         fetch(ARTISTS_URL, {
@@ -137,7 +132,6 @@ export default function Form() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(articleLinks)
         try {
             const docRef = await addDoc(collection(db, "songs"), {
                 artist_name: artist.name,
@@ -146,7 +140,6 @@ export default function Form() {
                 date: moment(date).format("YYYY-MM-DD"),
                 cover_url: album.cover_url,
                 note: note,
-                links: articleLinks
             });
             console.log("Document written with ID: ", docRef.id);
             setIsAlert(1);
