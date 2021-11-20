@@ -22,6 +22,11 @@ export default function Form() {
   const [song, setSong] = useState("");
   const [songsList, setSongsList] = useState([]);
   const { value: note, bind: bindNote, reset: resetNote } = useInput("");
+  const {
+    value: date,
+    bind: bindDate,
+    reset: resetDate,
+  } = useInput(moment(new Date()).format("YYYY-MM-DD"));
   const [isAlert, setIsAlert] = useState(0);
 
   const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
@@ -130,15 +135,13 @@ export default function Form() {
   const responseFromArtistsNotOk = () => {};
 
   const handleSubmit = async (event) => {
-    let dateString = moment(new Date()).format("YYYY-MM-DD");
-    console.log(dateString); //
     event.preventDefault();
     try {
       const docRef = await addDoc(collection(db, "songs"), {
         artist_name: artist.name,
         album_title: album.name,
         song_title: song,
-        date: dateString,
+        date: date,
         cover_url: album.cover_url,
         note: note,
       });
@@ -163,6 +166,7 @@ export default function Form() {
 
   const resetFields = () => {
     resetNote();
+    resetDate();
     setArtist();
     setArtist({ id: 0, name: "", slug: "" });
     setAlbum({
@@ -172,7 +176,6 @@ export default function Form() {
       cover_url: "",
     });
     setArtistsReleases([]);
-    setArtistList([]);
     setSong("");
     setSongsList([]);
   };
@@ -226,9 +229,9 @@ export default function Form() {
         <div>
           <input type="text" {...bindNote} />
         </div>
-        <label>Dzień:</label>
+        <label>Dzień (yyyy-mm-dd):</label>
         <div>
-          <input type="text" />
+          <input type="text" {...bindDate} />
         </div>
         <input type="submit" value="Dodaj" />
         <div>{returnAlert()}</div>
