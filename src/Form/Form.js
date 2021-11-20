@@ -182,9 +182,14 @@ export default function Form() {
 
   return (
     <div className="form">
-      Dodaj
+      <h2 className="form__title">Dodaj piosenkę na dzisiaj</h2>
+      <h5 className="form__subtitle">I opisz co ci dzisiaj chodzi po głowie</h5>
+      <fieldset className="form__field">
+        <label>Dzień (yyyy-mm-dd):</label>
+        <input type="text" {...bindDate} />
+      </fieldset>
       <form onSubmit={handleSubmit}>
-        <fieldset>
+        <fieldset className="form__field">
           <label>Artysta:</label>
           <select onChange={(e) => chooseArtist(e.target.value)}>
             <option value="0"></option>
@@ -198,7 +203,7 @@ export default function Form() {
           </select>
         </fieldset>
 
-        <fieldset>
+        <fieldset className="form__field">
           <label>Album:</label>
           <select onChange={(e) => chooseAlbum(e.target.value)}>
             <option value="0"></option>
@@ -212,7 +217,7 @@ export default function Form() {
           </select>
         </fieldset>
 
-        <fieldset>
+        <fieldset className="form__field">
           <label>Utwór:</label>
           <select onChange={(e) => chooseSong(e.target.value)}>
             <option value="0"></option>
@@ -226,17 +231,16 @@ export default function Form() {
           </select>
         </fieldset>
 
-        <fieldset>
+        <fieldset className="form__field">
           <label>Notatka:</label>
           <input type="text" {...bindNote} />
         </fieldset>
 
-        <fieldset>
-          <label>Dzień (yyyy-mm-dd):</label>
-          <input type="text" {...bindDate} />
-        </fieldset>
-
-        <input type="submit" value="Dodaj" />
+        <input
+          className="btn btn-primary form__submit-button"
+          type="submit"
+          value="Dodaj wpis"
+        />
         <div>{returnAlert()}</div>
       </form>
     </div>
