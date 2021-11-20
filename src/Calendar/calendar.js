@@ -10,7 +10,9 @@ import {
   getYearDropdownOptions,
 } from "./helpers";
 import InfoModal from "../SongView/InfoModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 
 Calendar.propTypes = {
   className: PropTypes.string,
@@ -27,6 +29,7 @@ export default function Calendar({
   const [year, month] = yearAndMonth;
   const [selectedDate, setSelectedDate] = useState("");
   const [isModalVisible, setModalVisible] = useState(false);
+  const [monthData, setMonthData] = useState([]);
 
   let currentMonthDays = createDaysForCurrentMonth(year, month);
   let previousMonthDays = createDaysForPreviousMonth(
@@ -77,6 +80,25 @@ export default function Calendar({
     setModalVisible(false);
   };
 
+  useEffect(async () => {
+    await loadMonthData();
+  }, []);
+
+  const loadMonthData = async () => {
+    let monthData = [];
+    const querySnapshot = await getDocs(collection(db, "songs"));
+    querySnapshot.forEach((doc) => {
+      if (doc.data().date) {
+        monthData.push(doc.data());
+      }
+    });
+    setMonthData(monthData);
+  };
+
+  const divStyle = (url) => {
+    return { backgroundImage: "url(" + url + ")" };
+  };
+
   return (
     <div className="calendar-root">
       <div className="navigation-header mt-2">
@@ -122,13 +144,14 @@ export default function Calendar({
         ))}
       </div>
       <div className="days-grid">
-        {calendarGridDayObjects.map((day) => (
+        {calendarGridDayObjects.map((day, index) => (
           <div
             key={day.dateString}
             className={classNames("day-grid-item-container", {
               "weekend-day": isWeekendDay(day.dateString),
               "current-month": day.isCurrentMonth,
             })}
+            style={monthData[index] ? divStyle(monthData[index].cover_url) : ""}
           >
             <div
               className="day-content-wrapper"
@@ -154,6 +177,7 @@ export default function Calendar({
 CalendarDayHeader.propTypes = {
   calendarDayObject: PropTypes.object.isRequired,
 };
+
 export function CalendarDayHeader({ calendarDayObject }) {
   return (
     <div className="day-grid-item-header">{calendarDayObject.dayOfMonth}</div>
