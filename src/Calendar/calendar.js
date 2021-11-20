@@ -21,7 +21,6 @@ Calendar.propTypes = {
   renderDay: PropTypes.func,
 };
 export default function Calendar({
-  className = "",
   yearAndMonth = [2021, 11],
   onYearAndMonthChange,
   renderDay = () => null,
@@ -76,8 +75,9 @@ export default function Calendar({
     onYearAndMonthChange([nextYear, nextMonth]);
   };
 
-  const closeModal = () => {
+  const closeModal = async () => {
     setModalVisible(false);
+    await loadMonthData();
   };
 
   useEffect(() => {
@@ -102,8 +102,10 @@ export default function Calendar({
   const divStyle = (dateString) => {
     const a = monthData.filter((data) => data.date === dateString);
     if (a.length > 0) {
-      console.log(a);
-      return { backgroundImage: "url(" + a[0].cover_url + ")" };
+      return {
+        backgroundImage: "url(" + a[0].cover_url + ")",
+        backgroundSize: "cover",
+      };
     }
   };
 
@@ -111,8 +113,18 @@ export default function Calendar({
     <div className="calendar-root">
       <div className="navigation-header mt-2">
         <div className="month-nav-arrow-buttons">
-          <button onClick={handleMonthNavBackButtonClick}>poprzedni</button>
-          <button onClick={handleMonthNavForwardButtonClick}>następny</button>
+          <button
+            className="btn btn-outline-dark p-1 m-1"
+            onClick={handleMonthNavBackButtonClick}
+          >
+            poprzedni
+          </button>
+          <button
+            className="btn btn-outline-dark p-1"
+            onClick={handleMonthNavForwardButtonClick}
+          >
+            następny
+          </button>
         </div>
         <div>
           <select
@@ -152,7 +164,7 @@ export default function Calendar({
         ))}
       </div>
       <div className="days-grid">
-        {calendarGridDayObjects.map((day, index) => (
+        {calendarGridDayObjects.map((day) => (
           <div
             key={day.dateString}
             className={classNames("day-grid-item-container", {
@@ -188,6 +200,8 @@ CalendarDayHeader.propTypes = {
 
 export function CalendarDayHeader({ calendarDayObject }) {
   return (
-    <div className="day-grid-item-header">{calendarDayObject.dayOfMonth}</div>
+    <div className="day-grid-item-header">
+      <div className="day-text-div">{calendarDayObject.dayOfMonth}</div>
+    </div>
   );
 }
