@@ -24,10 +24,10 @@ export default function Form() {
     const {value: note, bind: bindNote, reset: resetNote} = useInput("");
     const [isAlert, setIsAlert] = useState(0);
 
-    const ARTISTS_URL = "http://newonce-api.herokuapp.com/artists";
+    const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
     const RELEASES_URL =
-        "http://newonce-api.herokuapp.com/releases?search_query=";
-    const SONGS_URL = "http://newonce-api.herokuapp.com/releases/";
+        "https://newonce-api.herokuapp.com/releases?search_query=";
+    const SONGS_URL = "https://newonce-api.herokuapp.com/releases/";
 
     useEffect(() => {
         fetch(ARTISTS_URL, {
@@ -59,7 +59,7 @@ export default function Form() {
     const getArtistAlbums = async (artistName) => {
         let apiUrl = RELEASES_URL + artistName;
         fetch(apiUrl, {
-            method: "GET",
+            method: "GET"
         })
             .then((response) => {
                 if (response.ok) {
