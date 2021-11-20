@@ -189,18 +189,22 @@ export default function Form() {
       <h2 className="form__title">Dodaj piosenkę na dzisiaj</h2>
       <h5 className="form__subtitle">I opisz co ci dzisiaj chodzi po głowie</h5>
       <fieldset className="form__field">
-        <label>Dzień:</label>
+        <label>wybierz dzień:</label>
         {/* <input type="text" {...bindDate} /> */}
         <DatePicker
           selected={date}
           dateFormat="dd/MM/yyyy"
           onChange={(date) => setDate(date)}
+          className="form-control form__field__input"
         />
       </fieldset>
       <form onSubmit={handleSubmit}>
         <fieldset className="form__field">
           <label>Artysta:</label>
-          <select onChange={(e) => chooseArtist(e.target.value)}>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseArtist(e.target.value)}
+          >
             <option value="0"></option>
             {artistList.length > 0
               ? artistList.map((artist, key) => (
@@ -214,7 +218,10 @@ export default function Form() {
 
         <fieldset className="form__field">
           <label>Album:</label>
-          <select onChange={(e) => chooseAlbum(e.target.value)}>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseAlbum(e.target.value)}
+          >
             <option value="0"></option>
             {artistsReleases.length > 0
               ? artistsReleases.map((release, key) => (
@@ -228,7 +235,10 @@ export default function Form() {
 
         <fieldset className="form__field">
           <label>Utwór:</label>
-          <select onChange={(e) => chooseSong(e.target.value)}>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseSong(e.target.value)}
+          >
             <option value="0"></option>
             {songsList.length > 0
               ? songsList.map((song, key) => (
@@ -242,7 +252,11 @@ export default function Form() {
 
         <fieldset className="form__field">
           <label>Notatka:</label>
-          <input type="text" {...bindNote} />
+          <textarea
+            className="form-control form__field__note"
+            type="text"
+            {...bindNote}
+          ></textarea>
         </fieldset>
 
         <input

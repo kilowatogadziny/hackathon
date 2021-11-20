@@ -20,16 +20,23 @@
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   /* height: 10vh; */
-  width: min(30rem, 90%);
   margin: 0 auto;
 }
 .form__field > label {
   display: block;
 }
 
-select {
-  width: min(20rem, 80%);
+.form__field__input {
+  width: min(25rem, 85%);
+  display: block;
+  margin: 0 auto;
   min-width: 5rem;
+}
+
+.form__field__note {
+  width: min(35rem, 95%);
+  display: block;
+  margin: 0 auto;
 }
 
 .form__submit-button {
@@ -46,9 +53,6 @@ select {
   }
   .form__field {
     width: min(40rem, 90%);
-  }
-  select {
-    width: min(30rem, 80%);
   }
   .form__submit-button {
     margin: 1rem 0 1rem auto;
