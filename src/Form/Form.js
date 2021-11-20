@@ -135,9 +135,9 @@ export default function Form() {
     event.preventDefault();
     try {
       const docRef = await addDoc(collection(db, "songs"), {
-        artist: artist.name,
-        album: album.name,
-        song: song,
+        artist_name: artist.name,
+        album_title: album.name,
+        song_title: song,
         date: dateString,
         cover_url: album.cover_url,
         note: note,
