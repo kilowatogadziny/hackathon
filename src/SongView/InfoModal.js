@@ -7,9 +7,7 @@ import "./styles.css";
 import Form from "../Form/Form";
 
 export default function InfoModal({ songDate, isVisible, closeModal }) {
-  //   const [show, setShow] = useState(false);
   const handleClose = () => closeModal();
-  //   const handleShow = () => setShow(true);
 
   const [song, setSong] = useState([
     {
@@ -47,7 +45,6 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
         console.log("No such document!");
       }
 
-      // console.log(songOfDay);
       setSong(songOfDay);
     }
 
@@ -67,13 +64,11 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
 
   const formatDate = (date) => {
     const dateToFormat = date.split("-");
-    console.log(dateToFormat);
     return dateToFormat[2] + "-" + dateToFormat[1] + "-" + dateToFormat[0];
   };
 
   const conditionalForm = () => {
     if (songDate) {
-      // console.log(songDate.substring(5, 7));
       const chosenDate = new Date(
         songDate.substring(0, 4),
         songDate.substring(5, 7) - 1,
@@ -115,10 +110,6 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
 
   return (
     <div className="modalSongView">
-      {/* <Button className="nextButton" onClick={handleShow}>
-        Open Modal
-      </Button> */}
-
       <Modal
         centered
         scrollable={true}
