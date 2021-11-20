@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Modal, Button } from "react-bootstrap";
 import SongView from "./SongView";
 import { collection, getDocs, query, where } from "firebase/firestore";
