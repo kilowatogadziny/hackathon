@@ -176,7 +176,6 @@ export default function Form() {
       cover_url: "",
     });
     setArtistsReleases([]);
-    setArtistList([]);
     setSong("");
     setSongsList([]);
   };
