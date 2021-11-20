@@ -8,6 +8,11 @@ import moment from "moment";
 import { useInput } from "../hooks/inputHook";
 import SuccessMessage from "./SuccessMessage";
 import FailureMessage from "./FailureMessage";
+import DatePicker from "react-datepicker";
+import { registerLocale } from "react-datepicker";
+import pl from "date-fns/locale/pl";
+import "react-datepicker/dist/react-datepicker.css";
+registerLocale("pl", pl);
 
 export default function Form() {
   const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
@@ -17,17 +22,15 @@ export default function Form() {
     slug: "",
     cover_url: "",
   });
+  const [song, setSong] = useState("");
+  const { value: note, bind: bindNote, reset: resetNote } = useInput("");
+  const [date, setDate] = useState(new Date());
+
+  const [isAlert, setIsAlert] = useState(0);
+
   const [artistsReleases, setArtistsReleases] = useState([]);
   const [artistList, setArtistList] = useState([]);
-  const [song, setSong] = useState("");
   const [songsList, setSongsList] = useState([]);
-  const { value: note, bind: bindNote, reset: resetNote } = useInput("");
-  const {
-    value: date,
-    bind: bindDate,
-    reset: resetDate,
-  } = useInput(moment(new Date()).format("YYYY-MM-DD"));
-  const [isAlert, setIsAlert] = useState(0);
 
   const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
   const RELEASES_URL =
@@ -55,16 +58,13 @@ export default function Form() {
       (artist) => artist.id.toString() === chosenArtistId
     )[0];
     setArtist(chosenArtist);
-    console.log(chosenArtistId);
-    console.log(chosenArtist);
-    // fetch artist songs
     await getArtistAlbums(artist.name);
   };
 
   const getArtistAlbums = async (artistName) => {
     let apiUrl = RELEASES_URL + artistName;
     fetch(apiUrl, {
-      method: "GET"
+      method: "GET",
     })
       .then((response) => {
         if (response.ok) {
@@ -86,15 +86,12 @@ export default function Form() {
       slug: chosenAlbum.album_slug,
       cover_url: chosenAlbum.album_cover_url,
     });
-    console.log("chosen album slug");
-    console.log(chosenAlbum.album_name);
 
     await getAlbumSongs(chosenAlbum.album_slug);
   };
 
   const getAlbumSongs = async (albumSlug) => {
     let apiUrl = SONGS_URL + albumSlug;
-    console.log(apiUrl);
     fetch(apiUrl, {
       method: "GET",
     })
@@ -141,7 +138,7 @@ export default function Form() {
         artist_name: artist.name,
         album_title: album.name,
         song_title: song,
-        date: date,
+        date: moment(date).format("YYYY-MM-DD"),
         cover_url: album.cover_url,
         note: note,
       });
@@ -166,7 +163,7 @@ export default function Form() {
 
   const resetFields = () => {
     resetNote();
-    resetDate();
+    setDate(new Date());
     setArtist();
     setArtist({ id: 0, name: "", slug: "" });
     setAlbum({
@@ -182,25 +179,48 @@ export default function Form() {
 
   return (
     <div className="form">
-      Dodaj
+      <h2 className="form__title">Dodaj piosenkę na dzisiaj</h2>
+      <h5 className="form__subtitle">I opisz co ci dzisiaj chodzi po głowie</h5>
+      <fieldset className="form__field">
+        <label>wybierz dzień:</label>
+        {/* <input type="text" {...bindDate} /> */}
+        <DatePicker
+          selected={date}
+          dateFormat="dd/MM/yyyy"
+          locale="pl"
+          onChange={(date) => setDate(date)}
+          className="form-control form__field__input"
+        />
+      </fieldset>
       <form onSubmit={handleSubmit}>
-        <label>Artysta:</label>
-        <div>
-          {/* <input type="text" {...bindArtist} /> */}
-          <select onChange={(e) => chooseArtist(e.target.value)}>
+        <fieldset className="form__field">
+          <label>Artysta:</label>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseArtist(e.target.value)}
+            value={artist ? artist.id : 0}
+          >
             <option value="0"></option>
             {artistList.length > 0
               ? artistList.map((artist, key) => (
-                  <option value={artist.id} key={key}>
+                  <option
+                    value={artist.id}
+                    // selected={selected === artist.id}
+                    key={key}
+                  >
                     {artist.name}
                   </option>
                 ))
               : null}
           </select>
-        </div>
-        <label>Album:</label>
-        <div>
-          <select onChange={(e) => chooseAlbum(e.target.value)}>
+        </fieldset>
+
+        <fieldset className="form__field">
+          <label>Album:</label>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseAlbum(e.target.value)}
+          >
             <option value="0"></option>
             {artistsReleases.length > 0
               ? artistsReleases.map((release, key) => (
@@ -210,11 +230,14 @@ export default function Form() {
                 ))
               : null}
           </select>
-        </div>
+        </fieldset>
 
-        <label>Utwór:</label>
-        <div>
-          <select onChange={(e) => chooseSong(e.target.value)}>
+        <fieldset className="form__field">
+          <label>Utwór:</label>
+          <select
+            className="form-select form__field__input"
+            onChange={(e) => chooseSong(e.target.value)}
+          >
             <option value="0"></option>
             {songsList.length > 0
               ? songsList.map((song, key) => (
@@ -224,16 +247,22 @@ export default function Form() {
                 ))
               : null}
           </select>
-        </div>
-        <label>Notatka:</label>
-        <div>
-          <input type="text" {...bindNote} />
-        </div>
-        <label>Dzień (yyyy-mm-dd):</label>
-        <div>
-          <input type="text" {...bindDate} />
-        </div>
-        <input type="submit" value="Dodaj" />
+        </fieldset>
+
+        <fieldset className="form__field">
+          <label>Notatka:</label>
+          <textarea
+            className="form-control form__field__note"
+            type="text"
+            {...bindNote}
+          ></textarea>
+        </fieldset>
+
+        <input
+          className="btn btn-primary form__submit-button"
+          type="submit"
+          value="Dodaj wpis"
+        />
         <div>{returnAlert()}</div>
       </form>
     </div>
