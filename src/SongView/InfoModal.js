@@ -73,12 +73,12 @@ export default function InfoModal({ songDate, isVisible, closeModal }) {
 
   const conditionalForm = () => {
     if (songDate) {
+      console.log(songDate.substring(5, 7));
       const chosenDate = new Date(
         songDate.substring(0, 4),
-        songDate.substring(5, 7),
+        songDate.substring(5, 7) - 1,
         songDate.substring(8, 10)
       );
-      console.log(chosenDate);
       if (!song.artist_name) {
         return (
           <>
