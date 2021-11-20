@@ -64,7 +64,7 @@ export default function Form() {
   const getArtistAlbums = async (artistName) => {
     let apiUrl = RELEASES_URL + artistName;
     fetch(apiUrl, {
-      method: "GET"
+      method: "GET",
     })
       .then((response) => {
         if (response.ok) {
@@ -184,9 +184,8 @@ export default function Form() {
     <div className="form">
       Dodaj
       <form onSubmit={handleSubmit}>
-        <label>Artysta:</label>
-        <div>
-          {/* <input type="text" {...bindArtist} /> */}
+        <fieldset>
+          <label>Artysta:</label>
           <select onChange={(e) => chooseArtist(e.target.value)}>
             <option value="0"></option>
             {artistList.length > 0
@@ -197,9 +196,10 @@ export default function Form() {
                 ))
               : null}
           </select>
-        </div>
-        <label>Album:</label>
-        <div>
+        </fieldset>
+
+        <fieldset>
+          <label>Album:</label>
           <select onChange={(e) => chooseAlbum(e.target.value)}>
             <option value="0"></option>
             {artistsReleases.length > 0
@@ -210,10 +210,10 @@ export default function Form() {
                 ))
               : null}
           </select>
-        </div>
+        </fieldset>
 
-        <label>Utwór:</label>
-        <div>
+        <fieldset>
+          <label>Utwór:</label>
           <select onChange={(e) => chooseSong(e.target.value)}>
             <option value="0"></option>
             {songsList.length > 0
@@ -224,15 +224,18 @@ export default function Form() {
                 ))
               : null}
           </select>
-        </div>
-        <label>Notatka:</label>
-        <div>
+        </fieldset>
+
+        <fieldset>
+          <label>Notatka:</label>
           <input type="text" {...bindNote} />
-        </div>
-        <label>Dzień (yyyy-mm-dd):</label>
-        <div>
+        </fieldset>
+
+        <fieldset>
+          <label>Dzień (yyyy-mm-dd):</label>
           <input type="text" {...bindDate} />
-        </div>
+        </fieldset>
+
         <input type="submit" value="Dodaj" />
         <div>{returnAlert()}</div>
       </form>
