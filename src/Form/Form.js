@@ -8,6 +8,8 @@ import moment from "moment";
 import { useInput } from "../hooks/inputHook";
 import SuccessMessage from "./SuccessMessage";
 import FailureMessage from "./FailureMessage";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Form() {
   const [artist, setArtist] = useState({ id: 0, name: "", slug: "" });
@@ -22,11 +24,12 @@ export default function Form() {
   const [song, setSong] = useState("");
   const [songsList, setSongsList] = useState([]);
   const { value: note, bind: bindNote, reset: resetNote } = useInput("");
-  const {
-    value: date,
-    bind: bindDate,
-    reset: resetDate,
-  } = useInput(moment(new Date()).format("YYYY-MM-DD"));
+  // const {
+  //   value: date,
+  //   bind: bindDate,
+  //   reset: resetDate,
+  // } = useInput(moment(new Date()).format("YYYY-MM-DD"));
+  const [date, setDate] = useState(new Date());
   const [isAlert, setIsAlert] = useState(0);
 
   const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
@@ -141,11 +144,12 @@ export default function Form() {
         artist_name: artist.name,
         album_title: album.name,
         song_title: song,
-        date: date,
+        date: moment(date).format("YYYY-MM-DD"),
         cover_url: album.cover_url,
         note: note,
       });
       console.log("Document written with ID: ", docRef.id);
+      // console.log(moment(date).format("YYYY-MM-DD"));
       setIsAlert(1);
     } catch (error) {
       console.log("Error during saving to db");
@@ -166,7 +170,7 @@ export default function Form() {
 
   const resetFields = () => {
     resetNote();
-    resetDate();
+    setDate(new Date());
     setArtist();
     setArtist({ id: 0, name: "", slug: "" });
     setAlbum({
@@ -185,8 +189,13 @@ export default function Form() {
       <h2 className="form__title">Dodaj piosenkę na dzisiaj</h2>
       <h5 className="form__subtitle">I opisz co ci dzisiaj chodzi po głowie</h5>
       <fieldset className="form__field">
-        <label>Dzień (yyyy-mm-dd):</label>
-        <input type="text" {...bindDate} />
+        <label>Dzień:</label>
+        {/* <input type="text" {...bindDate} /> */}
+        <DatePicker
+          selected={date}
+          dateFormat="dd/MM/yyyy"
+          onChange={(date) => setDate(date)}
+        />
       </fieldset>
       <form onSubmit={handleSubmit}>
         <fieldset className="form__field">
