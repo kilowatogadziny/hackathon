@@ -191,6 +191,8 @@ CalendarDayHeader.propTypes = {
 
 export function CalendarDayHeader({ calendarDayObject }) {
   return (
-    <div className="day-grid-item-header">{calendarDayObject.dayOfMonth}</div>
+    <div className="day-grid-item-header">
+      <div className="day-text-div">{calendarDayObject.dayOfMonth}</div>
+    </div>
   );
 }
