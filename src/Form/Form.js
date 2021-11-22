@@ -31,8 +31,7 @@ export default function Form({ defaultDate }) {
   const [songsList, setSongsList] = useState([]);
 
   const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists";
-  const RELEASES_URL =
-    "https://newonce-api.herokuapp.com/releases?search_query=";
+  const RELEASES_URL = "https://newonce-api.herokuapp.com/releases?search_query=";
   const SONGS_URL = "https://newonce-api.herokuapp.com/releases/";
 
   useEffect(() => {
@@ -207,7 +206,6 @@ export default function Form({ defaultDate }) {
               ? artistList.map((artist, key) => (
                   <option
                     value={artist.id}
-                    // selected={selected === artist.id}
                     key={key}
                   >
                     {artist.name}
