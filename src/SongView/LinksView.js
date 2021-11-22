@@ -34,7 +34,7 @@ export default function LinksView({artistName}) {
                 }
             })
             .catch((error) => console.log(error));
-    }, []);
+    }, [artistName]);
 
 
     return (
