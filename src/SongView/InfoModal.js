@@ -22,8 +22,6 @@ export default function InfoModal({songDate, isVisible, closeModal}) {
         },
     ]);
 
-    var artistName;
-
     useEffect(() => {
         async function getSnapshot() {
             try {
@@ -48,7 +46,6 @@ export default function InfoModal({songDate, isVisible, closeModal}) {
                 console.log("No such document!");
             }
             console.log(songOfDay)
-            artistName=songOfDay.artist_name;
             setSong(songOfDay);
         }
 

@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from "react";
 import "regenerator-runtime/runtime.js";
-import {Badge} from "react-bootstrap";
 import {Form} from "react-bootstrap";
-import {indexOf} from "ramda";
 
 export default function LinksView({artistName}) {
 
@@ -44,7 +42,7 @@ export default function LinksView({artistName}) {
             {articleLinks.length > 0
                 ? articleLinks.map((song, key) => (
                     <a href={articleLinks[articleLinks.indexOf(song)].link}
-                       target="_blank">{articleLinks[articleLinks.indexOf(song)].title}<p/>
+                       target="_blank" rel="noreferrer">{articleLinks[articleLinks.indexOf(song)].title}<p/>
                     </a>
                 ))
                 : null}
