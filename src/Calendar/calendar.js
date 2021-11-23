@@ -76,6 +76,7 @@ export default function Calendar({
   };
 
   const closeModal = async () => {
+
     setModalVisible(false);
     await loadMonthData();
   };
