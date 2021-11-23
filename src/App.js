@@ -11,8 +11,8 @@ function App() {
   require("dayjs/locale/pl");
   dayjs.locale("pl");
 
-  const [isFormActive, setIsFormActive] = useState(true);
-  const [isCalActive, setIsCalActive] = useState(false);
+  const [isFormActive, setIsFormActive] = useState(false);
+  const [isCalActive, setIsCalActive] = useState(true);
 
   const selectForm = () => {
     setIsFormActive(true);
