@@ -5,7 +5,7 @@ import {Form} from "react-bootstrap";
 export default function LinksView({artistName}) {
 
     const ARTICLES_LINK = "https://newonce-api.herokuapp.com/related/articles?search_query=";
-    const ARTICLE_BASE_LINK = "https://newonce.net/artykul"
+    const ARTICLE_BASE_LINK = "https://newonce.net/artykul/"
 
     const [articleLinks, setArticleLinks] = useState([]);
 
