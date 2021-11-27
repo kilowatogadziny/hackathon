@@ -10,17 +10,45 @@ import FailureMessage from "./FailureMessage";
 
 export default function PodcastForm({dateToBeSaved}) {
 
-    const PODCASTS_URL = "https://api.newonce.me/api/v1/portals/net/podcasts/";
-    const EPISODES_URL = "https://api.newonce.me/api/v1/portals/net/podcasts/xxx/episodes";
+    const ARTISTS_URL = "https://newonce-api.herokuapp.com/artists?page=1&per_page=50";
+    const PODCASTS_URL = "https://newonce-api.herokuapp.com/related/podcast_episodes?search_query=xxx&page=1&per_page=5";
+
+    const [artistList, setArtistList] = useState([]);
+
+    useEffect(() => {
+        fetch(ARTISTS_URL, {
+            method: "GET",
+        })
+            .then((response) => {
+                if (response.ok) {
+                    response.json().then((json) => {
+                        setArtistList(json.items);
+                    });
+                } else {
+                    console.log("something went wrong");
+                }
+            })
+            .catch((error) => console.log(error));
+    }, []);
+
+    const [artist, setArtist] = useState({id: 0, name: "", slug: ""});
+
+    const chooseArtist = async (chosenArtistId) => {
+        const chosenArtist = artistList.filter(
+            (artist) => artist.id.toString() === chosenArtistId
+        )[0];
+        console.log(encodeURIComponent(chosenArtist.name.toString()));
+        let apiUrl = PODCASTS_URL.replace("xxx", encodeURIComponent(chosenArtist.name.toString()));
+        console.log(apiUrl);
+        await getArtistPodcasts(apiUrl);
+        setArtist(chosenArtist);
+    };
 
     const [podcastsList, setPodcastsList] = useState([]);
 
-    useEffect(() => {
-        fetch(PODCASTS_URL, {
+    const getArtistPodcasts = async (apiUrl) => {
+        fetch(apiUrl, {
             method: "GET",
-            headers: {
-                mode: 'no-cors'
-            },
         })
             .then((response) => {
                 if (response.ok) {
@@ -33,8 +61,7 @@ export default function PodcastForm({dateToBeSaved}) {
                 }
             })
             .catch((error) => console.log(error));
-    }, []);
-
+    };
 
     const [podcast, setPodcast] = useState({id: 0, title: "", slug: ""});
 
@@ -43,7 +70,7 @@ export default function PodcastForm({dateToBeSaved}) {
         const chosenPodcast = podcastsList.filter(
             (podcast) => podcast.id.toString() === chosenPodcastId
         )[0];
-        let apiUrl = EPISODES_URL.replace("xxx", chosenPodcast.slug.toString());
+        let apiUrl = PODCASTS_URL.replace("xxx", chosenPodcast.slug.toString());
         console.log(apiUrl);
         await getPodcastEpisodes(apiUrl);
         console.log(episodesList)
@@ -154,6 +181,27 @@ export default function PodcastForm({dateToBeSaved}) {
         <div className="form">
             <form onSubmit={handlePodcastSubmit}>
                 <fieldset className="form__field">
+                    <label>Artysta:</label>
+                    <select
+                        className="form-select form__field__input"
+                        onChange={(e) => chooseArtist(e.target.value)}
+                        value={artist ? artist.id : 0}
+                    >
+                        <option value="0"/>
+                        {artistList.length > 0
+                            ? artistList.map((artist, key) => (
+                                <option
+                                    value={artist.id}
+                                    key={key}
+                                >
+                                    {artist.name}
+                                </option>
+                            ))
+                            : null}
+                    </select>
+                </fieldset>
+
+                <fieldset className="form__field">
                     <label>Podcast:</label>
                     <select
                         className="form-select form__field__input"
@@ -162,12 +210,12 @@ export default function PodcastForm({dateToBeSaved}) {
                     >
                         <option value="0"/>
                         {podcastsList.length > 0
-                            ? podcastsList.map((podcast, key) => (
+                            ? podcastsList.map((podcastEl, key) => (
                                 <option
-                                    value={podcast.id}
+                                    value={podcastEl.id}
                                     key={key}
                                 >
-                                    {podcast.title}
+                                    {podcastEl.podcast.title}
                                 </option>
                             ))
                             : null}

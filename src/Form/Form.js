@@ -14,7 +14,6 @@ export default function Form({defaultDate}) {
 
     const [date, setDate] = useState(defaultDate ? defaultDate : new Date());
 
-
     const [stuffType, setStuffType] = useState('');
 
     const chooseTypeOfStuff = (selectedStuffType) => {
@@ -24,11 +23,11 @@ export default function Form({defaultDate}) {
     const conditionalForm = () => {
         if (stuffType === "podcast") {
             return (
-                <PodcastForm/>
+                <PodcastForm dateToBeSaved={date}/>
             );
         } else if (stuffType === "song") {
             return (
-                <SongForm/>
+                <SongForm dateToBeSaved={date}/>
             );
         } else {
             return (""
