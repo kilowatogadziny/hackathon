@@ -18,6 +18,9 @@ export default function PodcastForm({dateToBeSaved}) {
     useEffect(() => {
         fetch(PODCASTS_URL, {
             method: "GET",
+            headers: {
+                mode: 'no-cors'
+            },
         })
             .then((response) => {
                 if (response.ok) {
