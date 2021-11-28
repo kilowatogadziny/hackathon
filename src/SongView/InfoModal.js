@@ -73,8 +73,6 @@ export default function InfoModal({date, isVisible, closeModal}) {
 
         async function getMemorySnapshot() {
             let memoryData = [];
-            console.log("Date in getMemorySnapshot")
-            console.log(date)
             const queryForMemories = query(collection(db, "memories"), where("date", "==", date));
             const queryMemorySnapshot = await getDocs(queryForMemories);
             queryMemorySnapshot.forEach((doc) => {

@@ -77,8 +77,6 @@ export default function Calendar({
 
     const closeModal = async () => {
         setSelectedDate("");
-        console.log("Date in closeModal")
-        console.log(selectedDate)
         setModalVisible(false);
         await loadMonthData();
     };
@@ -93,7 +91,7 @@ export default function Calendar({
 
     const loadMonthData = async () => {
         let monthData = [];
-        const querySnapshot = await getDocs(collection(db, "songs"));
+        const querySnapshot = await getDocs(collection(db, "memories"));
         querySnapshot.forEach((doc) => {
             if (doc.data().date) {
                 monthData.push(doc.data());
@@ -105,8 +103,9 @@ export default function Calendar({
     const divStyle = (dateString) => {
         const a = monthData.filter((data) => data.date === dateString);
         if (a.length > 0) {
+            let image = a[0].cover_url != null ? "url(" + a[0].cover_url + ")" : "url(" + a[0].episode_photo + ")";
             return {
-                backgroundImage: "url(" + a[0].cover_url + ")",
+                backgroundImage: image,
                 backgroundSize: "cover",
             };
         }

@@ -145,13 +145,14 @@ export default function PodcastForm({dateToBeSaved}) {
     const handlePodcastSubmit = async (event) => {
         event.preventDefault();
         try {
-            const docRef = await addDoc(collection(db, "podcasts"), {
+            const docRef = await addDoc(collection(db, "memories"), {
                 episode_id: episode.episode_id,
                 episode_podcast: episode.episode_podcast,
                 episode_title: episode.episode_title,
                 episode_slug: episode.episode_slug,
                 date: moment(dateToBeSaved).format("YYYY-MM-DD"),
                 episode_photo: episode.episode_photo,
+                type: "podcast",
                 note: note,
             });
             console.log("Document written with ID: ", docRef.id);
