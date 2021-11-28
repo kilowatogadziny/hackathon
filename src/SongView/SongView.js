@@ -6,7 +6,7 @@ import { Form } from "react-bootstrap";
 function SongView({ song }) {
   return (
     <div className="songview">
-      <img src={song.cover_url} alt="realese cover" className="img-thumbnail" />
+      <img src={song.cover_url} alt="release cover" className="img-thumbnail" />
       <h6>
         <Badge bg="dark"> Artysta:</Badge>{" "}
         <Form.Label>{song.artist_name}</Form.Label>

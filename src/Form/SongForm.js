@@ -39,7 +39,6 @@ export default function SongForm({dateToBeSaved}) {
             (artist) => artist.id.toString() === chosenArtistId
         )[0];
         let apiUrl = RELEASES_URL + chosenArtist.slug.toString() + "/releases";
-        console.log(apiUrl);
         await getArtistAlbums(apiUrl);
         setArtist(chosenArtist);
     };
@@ -111,7 +110,6 @@ export default function SongForm({dateToBeSaved}) {
             .then((response) => {
                 if (response.ok) {
                     response.json().then((json) => {
-                        console.log(json);
                         setSongsList(json.tracklist);
                     });
                 } else {

@@ -1,0 +1,16 @@
+.songview {
+
+}
+
+.modal-header {
+    border-bottom: 0 none;
+}
+
+.modal-title {
+    text-align: center;
+    font-size: 18px;
+}
+
+.modal-footer {
+    border-top: 0 none;
+}
