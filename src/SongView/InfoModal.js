@@ -6,8 +6,9 @@ import {db} from "../firebaseConfig";
 import "./styles.css";
 import Form from "../Form/Form";
 import LinksView from "./LinksView";
+import PodcastView from "../PodcastView/PodcastView";
 
-export default function InfoModal({songDate, isVisible, closeModal}) {
+export default function InfoModal({date, isVisible, closeModal}) {
 
     const handleClose = () => closeModal();
 
@@ -22,37 +23,83 @@ export default function InfoModal({songDate, isVisible, closeModal}) {
         },
     ]);
 
+    const [podcast, setPodcast] = useState([
+        {
+            episode_photo: "",
+            episode_podcast: "",
+            episode_slug: "",
+            episode_title: "",
+            date: "",
+            note: "",
+        },
+    ]);
+
+    function resetSongAndPodcast() {
+        setSong([
+            {
+                album_title: "",
+                artist_name: "",
+                cover_url: "",
+                date: "",
+                song_title: "",
+                note: "",
+            },
+        ])
+        setPodcast([
+            {
+                episode_photo: "",
+                episode_podcast: "",
+                episode_slug: "",
+                episode_title: "",
+                date: "",
+                note: "",
+            },
+        ])
+    }
+
     useEffect(() => {
         async function getSnapshot() {
             try {
-                let data = [];
-                const q = query(collection(db, "songs"), where("date", "==", songDate));
-                const querySnapshot = await getDocs(q);
-                querySnapshot.forEach((doc) => {
-                    data.push(doc.data());
-                });
-                return data[0];
+                let memoryData = await getMemorySnapshot();
+                if (memoryData.length > 0) {
+                    return memoryData[0];
+                } else {
+                    return "";
+                }
             } catch (e) {
                 return null;
             }
-        };
+        }
+
+        async function getMemorySnapshot() {
+            let memoryData = [];
+            const queryForMemories = query(collection(db, "memories"), where("date", "==", date));
+            const queryMemorySnapshot = await getDocs(queryForMemories);
+            queryMemorySnapshot.forEach((doc) => {
+                memoryData.push(doc.data());
+            });
+            return memoryData;
+        }
 
         async function fetchData() {
-            let songOfDay = {};
+            let elementToBeDisplayed = {};
             const snapshot = await getSnapshot();
-            if (snapshot) {
-                songOfDay = toSongOfDayObject(snapshot);
+            if (snapshot && snapshot.type === "song") {
+                elementToBeDisplayed = toSongOfDayObject(snapshot);
+                setSong(elementToBeDisplayed);
+            } else if (snapshot && snapshot.type === "podcast") {
+                elementToBeDisplayed = toPodcastObject(snapshot);
+                setPodcast(elementToBeDisplayed);
             } else {
                 console.log("No such document!");
+                resetSongAndPodcast();
             }
-            console.log(songOfDay)
-            setSong(songOfDay);
         }
 
         fetchData().catch(() => {
             console.log("Error fetching data")
         });
-    }, [songDate]);
+    }, [date]);
 
     const toSongOfDayObject = (data) => {
         return {
@@ -65,19 +112,30 @@ export default function InfoModal({songDate, isVisible, closeModal}) {
         };
     };
 
+    const toPodcastObject = (data) => {
+        return {
+            episode_podcast: data.episode_podcast,
+            episode_slug: data.episode_slug,
+            episode_title: data.episode_title,
+            episode_photo: data.episode_photo,
+            date: data.date,
+            note: data.note,
+        };
+    };
+
     const formatDate = (date) => {
         const dateToFormat = date.split("-");
         return dateToFormat[2] + "-" + dateToFormat[1] + "-" + dateToFormat[0];
     };
 
     const conditionalForm = () => {
-        if (songDate) {
+        if (date) {
             const chosenDate = new Date(
-                songDate.substring(0, 4),
-                songDate.substring(5, 7) - 1,
-                songDate.substring(8, 10)
+                date.substring(0, 4),
+                date.substring(5, 7) - 1,
+                date.substring(8, 10)
             );
-            if (!song.artist_name) {
+            if (!song.artist_name && !podcast.episode_title) {
                 return (
                     <>
                         <Modal.Header closeButton className="modal-header"/>
@@ -89,7 +147,7 @@ export default function InfoModal({songDate, isVisible, closeModal}) {
                         </Modal.Footer>
                     </>
                 );
-            } else {
+            } else if (song.artist_name != null) {
                 return (
                     <>
                         <Modal.Header closeButton className="modal-header">
@@ -100,6 +158,24 @@ export default function InfoModal({songDate, isVisible, closeModal}) {
                         <Modal.Body>
                             <SongView song={song}/>
                             <LinksView artistName={song.artist_name}/>
+                        </Modal.Body>
+                        <Modal.Footer className="modal-footer">
+                            <Button variant="dark" onClick={handleClose}>
+                                Zamknij
+                            </Button>
+                        </Modal.Footer>
+                    </>
+                );
+            } else if (podcast.episode_title != null) {
+                return (
+                    <>
+                        <Modal.Header closeButton className="modal-header">
+                            <Modal.Title className="modal-title">
+                                Podcast z dnia: {formatDate(podcast.date)}
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <PodcastView episode={podcast}/>
                         </Modal.Body>
                         <Modal.Footer className="modal-footer">
                             <Button variant="dark" onClick={handleClose}>

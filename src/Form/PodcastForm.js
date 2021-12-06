@@ -37,9 +37,7 @@ export default function PodcastForm({dateToBeSaved}) {
         const chosenArtist = artistList.filter(
             (artist) => artist.id.toString() === chosenArtistId
         )[0];
-        console.log(encodeURIComponent(chosenArtist.name.toString()));
         let apiUrl = PODCASTS_URL.replace("xxx", encodeURIComponent(chosenArtist.name.toString()));
-        console.log(apiUrl);
         await getArtistPodcasts(apiUrl);
         setArtist(chosenArtist);
     };
@@ -53,7 +51,6 @@ export default function PodcastForm({dateToBeSaved}) {
             .then((response) => {
                 if (response.ok) {
                     response.json().then((json) => {
-                        console.log(json.items);
                         setPodcastsList(json.items);
                     });
                 } else {
@@ -66,14 +63,11 @@ export default function PodcastForm({dateToBeSaved}) {
     const [podcast, setPodcast] = useState({id: 0, title: "", slug: ""});
 
     const choosePodcast = async (chosenPodcastId) => {
-        console.log(chosenPodcastId);
         const chosenPodcast = podcastsList.filter(
             (podcast) => podcast.id.toString() === chosenPodcastId
         )[0];
         let apiUrl = PODCASTS_URL.replace("xxx", chosenPodcast.slug.toString());
-        console.log(apiUrl);
         await getPodcastEpisodes(apiUrl);
-        console.log(episodesList)
         setPodcast(chosenPodcast);
     };
 
@@ -83,6 +77,7 @@ export default function PodcastForm({dateToBeSaved}) {
         episode_title: "",
         episode_slug: "",
         episode_photo: "",
+        episode_podcast: "",
     });
 
     const getPodcastEpisodes = async (apiUrl) => {
@@ -106,6 +101,7 @@ export default function PodcastForm({dateToBeSaved}) {
             for (const episode of episodesFromApi) {
                 let newRelease = {
                     episode_id: episode.id,
+                    episode_podcast: episode.podcast.title,
                     episode_title: episode.title,
                     episode_slug: episode.slug,
                     episode_photo: episode.picture,
@@ -125,6 +121,7 @@ export default function PodcastForm({dateToBeSaved}) {
         )[0];
         setEpisode({
             episode_id: chosenEpisode.episode_id,
+            episode_podcast: chosenEpisode.episode_podcast,
             episode_title: chosenEpisode.episode_title,
             episode_slug: chosenEpisode.episode_slug,
             episode_photo: chosenEpisode.episode_photo,
@@ -148,12 +145,14 @@ export default function PodcastForm({dateToBeSaved}) {
     const handlePodcastSubmit = async (event) => {
         event.preventDefault();
         try {
-            const docRef = await addDoc(collection(db, "podcasts"), {
+            const docRef = await addDoc(collection(db, "memories"), {
                 episode_id: episode.episode_id,
+                episode_podcast: episode.episode_podcast,
                 episode_title: episode.episode_title,
                 episode_slug: episode.episode_slug,
                 date: moment(dateToBeSaved).format("YYYY-MM-DD"),
                 episode_photo: episode.episode_photo,
+                type: "podcast",
                 note: note,
             });
             console.log("Document written with ID: ", docRef.id);
@@ -174,6 +173,7 @@ export default function PodcastForm({dateToBeSaved}) {
             episode_title: "",
             episode_slug: "",
             episode_photo: "",
+            episode_podcast: "",
         });
     };
 
